@@ -28,7 +28,10 @@ void screen_pairing_draw(lv_obj_t *body, const app_render_t *r, bool fresh)
 {
     if (fresh) {
         s_title = line(body, TITLE_Y);
+        /* One line, cut with dots: LVGL adds them only when the text overflows the label's own height, so the
+         * height is fixed. A long Mac name (63 characters, as on a CI runner) otherwise wraps over the HOST line. */
         lv_label_set_long_mode(s_title, LV_LABEL_LONG_MODE_DOTS);
+        lv_obj_set_height(s_title, lv_font_get_line_height(font_body));
         s_host = line(body, HOST_Y);
         s_dev = line(body, DEV_Y);
     }

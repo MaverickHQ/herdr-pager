@@ -40,12 +40,18 @@ type setupPage struct {
 // the token, traded for the page's cookie.
 func startPage(t *testing.T, b *Bridge, port string) *setupPage {
 	t.Helper()
+	return startPageNamed(t, b, port, "emu-mac")
+}
+
+// startPageNamed is startPage on a Mac whose LocalHostName is hostName.
+func startPageNamed(t *testing.T, b *Bridge, port, hostName string) *setupPage {
+	t.Helper()
 	p := &setupPage{t: t}
 	h, err := setup.NewHandler(setup.Options{
 		Home:          b.Home,
 		Getenv:        func(string) string { return "" },
 		Ports:         func() ([]string, error) { return []string{port}, nil },
-		LocalHostName: func() (string, error) { return "emu-mac", nil },
+		LocalHostName: func() (string, error) { return hostName, nil },
 		KnownNetworks: func() []string { return nil },
 		Log:           &p.log,
 	})
@@ -161,6 +167,35 @@ func field(v map[string]any, keys ...string) string {
 // harness's bridge comes up. The page's step and pager channels show the
 // pairing, and the password is in nothing the page answered, streamed or
 // logged.
+// TestTheConfirmScreensKeepALongMacNameToOneLine: a Mac's LocalHostName can
+// be 63 characters, such as a CI runner's. The pairing screens' titles name
+// it, and stay one line, cut with dots, so the bridge's fingerprint under them
+// is never drawn over (CI's first run, 2026-11-07: the title wrapped onto the
+// HOST line). The goldens are the short name's, with only the title masked.
+func TestTheConfirmScreensKeepALongMacNameToOneLine(t *testing.T) {
+	long := "Mac-mini-6A1F2C3D-0B1C-4D2E-9F0E-26249A0B1C2D-of-the-build-farm"
+	if len(long) != 63 {
+		t.Fatalf("the name is %d characters; want macOS's longest, 63", len(long))
+	}
+	b := StartBridge(t, quietScenario)
+	in := Start(t, Options{})
+	in.AirNetworks(EmuNetwork)
+	in.WaitText("PAIR VIA USB", 10*time.Second)
+
+	page := startPageNamed(t, b, in.Serial, long)
+	status, offer, err := page.post("/api/pair", map[string]string{"port": in.Serial, "name": "emu-01", "host": "127.0.0.1"})
+	if err != nil || status != http.StatusOK {
+		t.Fatalf("POST /api/pair: %d %v %v; want 200", status, offer, err)
+	}
+	hostFP := ssh.FingerprintSHA256(b.HostKey)
+	in.WaitText("HOST "+hostFP, 30*time.Second)
+	in.MatchGoldenBlanked("pairing/confirm.png", maskPairingTitle, maskPairingDev)
+
+	in.Press("boot", 100)
+	in.WaitText("DEV "+field(offer, "pager", "fingerprint"), 5*time.Second)
+	in.MatchGoldenBlanked("pairing/confirmed.png", maskPairingTitle, maskPairingDev)
+}
+
 func TestSetupPairsTheEmulatedPager(t *testing.T) {
 	b := StartBridge(t, quietScenario)
 	in := Start(t, Options{})

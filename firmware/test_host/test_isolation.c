@@ -89,6 +89,14 @@ static bool included_header(const char *line, char *out, size_t cap)
     return true;
 }
 
+/* Joins a, sep and b into out, or fails the test: a cut path would leave a
+ * file out of the scan without a word (GCC's -Wformat-truncation, on CI). */
+static void join_path(char *out, size_t cap, const char *a, const char *sep, const char *b)
+{
+    int n = snprintf(out, cap, "%s%s%s", a, sep, b);
+    TEST_ASSERT_TRUE_MESSAGE(n >= 0 && (size_t)n < cap, "a path too long for the isolation scan's buffer");
+}
+
 static void note_bad(scan_t *sc, const char *rel, const char *header)
 {
     sc->n_bad++;
@@ -128,7 +136,7 @@ static void scan_file(scan_t *sc, const char *path, const char *rel)
 static void scan_dir(scan_t *sc, const char *root, const char *rel)
 {
     char dir_path[PATH_MAX_LEN];
-    snprintf(dir_path, sizeof(dir_path), "%s%s%s", root, rel[0] ? "/" : "", rel);
+    join_path(dir_path, sizeof(dir_path), root, rel[0] ? "/" : "", rel);
     DIR *d = opendir(dir_path);
     TEST_ASSERT_NOT_NULL_MESSAGE(d, dir_path);
     struct dirent *e;
@@ -137,8 +145,8 @@ static void scan_dir(scan_t *sc, const char *root, const char *rel)
             continue;
         }
         char path[PATH_MAX_LEN], child[PATH_MAX_LEN];
-        snprintf(path, sizeof(path), "%s/%s", dir_path, e->d_name);
-        snprintf(child, sizeof(child), "%s%s%s", rel, rel[0] ? "/" : "", e->d_name);
+        join_path(path, sizeof(path), dir_path, "/", e->d_name);
+        join_path(child, sizeof(child), rel, rel[0] ? "/" : "", e->d_name);
         struct stat st;
         if (lstat(path, &st) != 0) {
             continue;
@@ -163,7 +171,7 @@ static void scan(scan_t *sc, const char *root)
 static void write_file(const char *dir, const char *rel, const char *text)
 {
     char path[PATH_MAX_LEN];
-    snprintf(path, sizeof(path), "%s/%s", dir, rel);
+    join_path(path, sizeof(path), dir, "/", rel);
     for (char *slash = strchr(path + strlen(dir) + 1, '/'); slash; slash = strchr(slash + 1, '/')) {
         *slash = '\0';
         mkdir(path, 0700); /* it may exist */
@@ -183,7 +191,7 @@ static void remove_tree(const char *path)
         while ((e = readdir(d)) != NULL) {
             if (strcmp(e->d_name, ".") != 0 && strcmp(e->d_name, "..") != 0) {
                 char child[PATH_MAX_LEN];
-                snprintf(child, sizeof(child), "%s/%s", path, e->d_name);
+                join_path(child, sizeof(child), path, "/", e->d_name);
                 remove_tree(child);
             }
         }
