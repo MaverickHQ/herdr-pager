@@ -1,0 +1,7 @@
+# The board only: the pager's static data goes to PSRAM (CONFIG_SPIRAM_ALLOW_BSS_SEG_EXTERNAL_MEMORY).
+# The app core's state, the codec's and pairing's buffers and the link's are 78 KB: in internal RAM,
+# with Wi-Fi up, the pager's tasks didn't fit (task 10.4). None of it is touched from an interrupt.
+[mapping:pager_extram_bss]
+archive: libmain.a
+entries:
+    * (extram_bss)

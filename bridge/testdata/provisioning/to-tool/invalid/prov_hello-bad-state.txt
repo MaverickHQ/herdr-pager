@@ -1,0 +1,1 @@
+@P {"t":"prov_hello","fw":"0.1.0","pubkey":"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAnULfN18UYEHFPLj/PhfEMf7NvNdFoELzBJBtMsCVgj","state":"paired"}

@@ -1,0 +1,1 @@
+@P {"t":"prov_set","wifi":[{"ssid":"HomeNet-2G","pass":"correct-horse-battery"}]}

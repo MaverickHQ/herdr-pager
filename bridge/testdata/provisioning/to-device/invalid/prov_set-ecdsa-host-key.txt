@@ -1,0 +1,1 @@
+@P {"t":"prov_set","host_key":"ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCAa0MmoCy0ZDeiqO1Cs7HXUbAH4VzjX0Em6zzpiE1I3VsRSmJWTgC8LdILCyA6+uUom8IOdRoREWODIw/MUhJk=","wifi":[{"ssid":"HomeNet-2G","pass":"correct-horse-battery"}]}

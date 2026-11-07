@@ -1,0 +1,9 @@
+[[device]]
+name  = "pager-01"
+key   = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAnULfN18UYEHFPLj/PhfEMf7NvNdFoELzBJBtMsCVgj pager-01"
+added = 2026-10-22T09:30:00Z
+
+[[device]]
+name  = "pager-02"
+key   = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBFlTBpNN2IZ/XfcnYg5nSzboXnFnSWwfn9N pager-02"
+added = 2026-10-23T18:05:00Z

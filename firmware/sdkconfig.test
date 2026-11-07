@@ -1,0 +1,5 @@
+# The test build (design D2-4): @T lines on the console and the app core's timestamped log.
+# Added after sdkconfig.defaults (and its .esp32s3) by the board checks in tools/measure:
+#   idf.py -D "SDKCONFIG_DEFAULTS=sdkconfig.defaults;sdkconfig.test" ...
+# A release build never uses it.
+CONFIG_PAGER_TEST_HOOKS=y

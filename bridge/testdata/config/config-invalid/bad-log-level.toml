@@ -1,0 +1,2 @@
+listen    = "0.0.0.0:2277"
+log_level = "trace"

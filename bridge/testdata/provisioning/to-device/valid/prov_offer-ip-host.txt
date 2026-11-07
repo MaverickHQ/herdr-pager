@@ -1,0 +1,1 @@
+@P {"t":"prov_offer","name":"emu-01","host":"127.0.0.1","port":52817,"host_key":"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIITD0UXh5rvWrJ9ECHIk1KDIInpniagO0TKg6w/6c/tO","host_name":"studio-mac"}

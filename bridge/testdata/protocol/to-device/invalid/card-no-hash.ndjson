@@ -1,0 +1,1 @@
+{"t":"card","id":9,"pane":"w1:p3","st":"blocked","seq":41,"kind":"permission","summary":"Bash command","lines":["touch approved.txt","Create empty file approved.txt"],"can":["approve","deny","jump"]}

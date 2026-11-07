@@ -1,0 +1,40 @@
+
+  Get to finished work sooner with Opus 5.5. Switch anytime with /model.
+
+❯ Use the echo tool of the recon MCP server with the text "hello from the recon". Do nothing else.
+
+  Called recon (ctrl+o to expand)
+  ⎿  Interrupted · What should Claude do instead?
+
+✻ Crunched for 1s · done 15:40
+
+❯ Use the echo tool of the recon MCP server with the text "hello from the recon". Do nothing else.
+
+  Called recon (ctrl+o to expand)
+  ⎿  Interrupted · What should Claude do instead?
+
+✻ Worked for 1s · done 15:43
+
+❯ Use the echo tool of the recon MCP server with exactly this text, nothing added: The quick brown fox jumps over the
+  lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown
+  fox jumps over the lazy dog. Do nothing else.
+
+⏺ Calling recon… (ctrl+o to expand)
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ Tool use
+ recon — Echo Tool: (MCP)
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+ text:
+   │ The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox
+   │  jumps over the lazy dog. The quick brown fox jumps over the lazy dog.
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+ About the recon — Echo Tool:
+ │ Returns the text it is given.
+
+ Do you want to proceed?
+ ❯ 1. Yes
+   2. Yes, and don't ask again for recon — Echo commands in /private/tmp/herdr-pager-recon
+   3. No
+
+ Esc to cancel · Tab to amend

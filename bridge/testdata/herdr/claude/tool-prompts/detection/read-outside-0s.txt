@@ -1,0 +1,35 @@
+$ claude --model claude-haiku-5-5 --safe-mode --setting-sources project --strict-mcp-config --mcp-config /tmp/herdr-pag
+er-recon-state/mcp.json --permission-mode manual
+ ▐▛███▛█   Claude Code v2.1.316
+▝▜██████▀  Haiku 5.5 · Claude Max
+ ▝▝   ▝▝   /private/tmp/herdr-pager-recon
+
+⚠ Safe mode: all customizations are disabled (CLAUDE.md, skills, plugins, hooks, MCP, agents, and more)
+  Restart without --safe-mode to re-enable
+
+▎ Your Max plan includes $100 a month in API credits to power your apps and agents. Claim them at
+▎ https://clau.de/api-credits
+
+❯ Use the WebFetch tool to fetch https://example.com/ and tell me its title. Do nothing else.
+
+⏺ Fetch(https://example.com/)
+  ⎿  Interrupted · What should Claude do instead?
+
+✻ Worked for 3s · done 19:28
+
+❯ Use the Read tool to read the file /etc/shells. Do nothing else.
+
+⏺ Reading 1 file… (ctrl+o to expand)
+  ⎿  /etc/shells
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+ Read file
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+ Read(/etc/shells)
+╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌
+ Do you want to proceed?
+ ❯ 1. Yes
+   2. Yes, allow reading from /etc and /private/etc during this session
+   3. No
+
+ Esc to cancel · Tab to amend

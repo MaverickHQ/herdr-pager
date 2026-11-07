@@ -1,0 +1,1 @@
+@P {"t":"prov_set","host_key":"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIITD0UXh5rvWrJ9ECHIk1KDIInpniagO0TKg6w/6c/tO","wifi":[{"ssid":"HomeNet-2G","pass":"correct-horse-battery"},{"ssid":"Sam’s iPhone","pass":"hotspot-pass-8"},{"ssid":"Studio","pass":"3f6a1c0e9b2d47a8c5e1f09b3d7a2c6e8f4b1d0a9c7e5b3f2d1a0c9e8b7f6a5d"},{"ssid":"Guest","pass":""}]}

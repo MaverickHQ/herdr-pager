@@ -1,0 +1,1 @@
+{"t":"card","id":14,"pane":"w1:p5","st":"blocked","seq":9,"hash":"760e2ea33f6918596dd2c7fd6da19184b53b9be9a0dac12e19b447992a944bb4","kind":"permission","risk":"danger","summary":"Bash command","lines":["git -C work push --force","Force push in the work test repo"],"can":["approve","deny","jump"]}

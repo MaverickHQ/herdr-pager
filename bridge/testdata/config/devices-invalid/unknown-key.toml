@@ -1,0 +1,5 @@
+[[device]]
+name  = "pager-01"
+key   = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAnULfN18UYEHFPLj/PhfEMf7NvNdFoELzBJBtMsCVgj pager-01"
+fingerprint = "SHA256:/a7FlX9Y4t0WSS"
+added = 2026-10-22T09:30:00Z

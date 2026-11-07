@@ -1,0 +1,1 @@
+@P {"t":"prov_hello","fw":"0.1.0","pubkey":"ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCAa0MmoCy0ZDeiqO1Cs7HXUbAH4VzjX0Em6zzpiE1I3VsRSmJWTgC8LdILCyA6+uUom8IOdRoREWODIw/MUhJk=","state":"waiting"}

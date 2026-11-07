@@ -1,0 +1,12 @@
+menu "herdr-pager"
+
+    config PAGER_TEST_HOOKS
+        bool "Test hooks: @T lines on the serial console (test builds only)"
+        default n
+        help
+            Accept "@T press BOOT 1000" and the like on the serial console,
+            and timestamp the app core's log, so the board's measurements can
+            run unattended (phase 2 design D2-4). A release build compiles the
+            hooks out and ignores @T lines.
+
+endmenu

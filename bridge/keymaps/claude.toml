@@ -1,0 +1,152 @@
+# Claude Code's keymap for pager-bridge (pager design §Keymaps).
+# Written by the phase 0 recon (task 4.9) from bridge/testdata/herdr/claude/.
+# Patterns are RE2 (Go). Phase 0's are kept to the subset that POSIX ERE reads
+# the same way, so `bridge/recon/capture-claude.sh check` can test them against
+# the captures. box_start, drop_lines and file_match came in phase 2 (task
+# 1.8, design D2-7): the bridge's Go tests check them (bridge/keymaps).
+# Re-capture after a Claude Code release: run the recon, then review the diff.
+
+[claude]                       # the AgentInfo.agent string (claude/VERSIONS)
+# agent_version and captured are phase 0's set's: the Bash, Edit and Create
+# patterns come from Claude Code 2.1.306's captures (claude/). The tool
+# prompts' patterns (WebFetch's question, url_prompt, url_match, mcp_prompt,
+# mcp_match, and file_match's Read layout) come from 2.1.316's
+# (claude/tool-prompts/, O-88 and O-90).
+agent_version = "2.1.306"
+captured      = "2026-10-21"
+approve   = ["1"]              # "1. Yes"; option 2 is "don't ask again" (KEYS.md)
+deny      = ["esc"]            # "Esc to cancel"
+interrupt = ["esc"]            # never ctrl+c: it can exit Claude Code
+
+# The question line of every captured permission prompt: a Bash command
+# ("Do you want to proceed?"), a file edit ("Do you want to make this edit to
+# <file>?") and a file create ("Do you want to create <file>?"). The question
+# tool's prompt, the plan-approval prompt ("Would you like to proceed?") and
+# the folder-trust prompt match none of them. The second is WebFetch's
+# question (O-88, Claude Code 2.1.316: tool-prompts/); a Read outside the
+# folder asks "Do you want to proceed?".
+permission_match = [
+  '''Do you want to (proceed\?|make this edit to |create )''',
+  '''Do you want to allow Claude to fetch this content\?''',
+]
+
+# The requested command of a Bash prompt: the lines between the two dashed
+# rules under the "Bash command" header (group 1; trim the leading space).
+# Matched against the prompt box, which begins with its title line: ^ and $
+# are the box's start and end, in RE2 and POSIX ERE alike. The box must hold
+# exactly two runs of ╌, the two rules, so a ╌ in the description, the command
+# or anything after them reads no command, and the card fails closed (the
+# security pass's review, 2026-11-01). `capture-claude.sh check` cuts the box
+# before it matches.
+command_match = '''^ Bash command\n[^╌]*╌+\n([^╌]+)\n╌+\n[^╌]*$'''
+
+# No line changed between the 0 s, 2 s and 70 s captures of any prompt, nor
+# between the boxes of the first and the repeated shell prompt
+# (`capture-claude.sh diffs` prints nothing), so nothing needs ignoring yet.
+ignore_match = []
+
+# The rule that starts the prompt box: a full line of ─, then the box's title
+# line (" Bash command", " Edit file", " ☐ Colour", " Ready to code?"), one
+# space in and at most 40 characters. The prompt box is every line below the
+# line where its last match begins; permission_match, command_match and
+# file_match read only the box, never the screen above it. The question and
+# plan-approval prompts have a second ─ rule inside the box, before an option
+# ("  4. Chat about this", two spaces in) or a long question; the title rule
+# keeps box_start to the box's own top.
+box_start = '''(?m)^─+\n [^ \n][^\n]{0,39}$'''
+
+# Lines of the box that never reach a card, each matched against one line
+# without its newline: the "Tip:" line under a Bash prompt's title, and the
+# ─ and ╌ rules inside the box.
+drop_lines = [
+  '''^ *Tip: ''',
+  '''^[─╌]+$''',
+]
+
+# The path of a file prompt: the box's second line, under its "Edit file" or
+# "Create file" title line, above the ╌ rule (group 1). Anchored to the box's
+# start, so nothing in the file's content can stand in for it. Only those two
+# titles (O-88's review): a file prompt under any other title, such as a
+# "Read file" box with a line between its title and its rule, reads no path
+# from that layout, and its card fails closed. Or a Read
+# outside the folder's (O-88, Claude Code 2.1.316: tool-prompts/), under its
+# "Read file" title and a ╌ rule, inside "Read(…)", on a line of its own
+# above the second rule (group 2); the box must hold exactly those two runs
+# of ╌, so a path that wraps or holds a newline or a ╌ reads none, and the
+# card fails closed. The bridge takes the first group that matched.
+file_match = '''^ (?:Edit|Create) file\n ([^\n╌]+)\n╌|^ Read file\n╌+\n Read\(([^\n╌]+)\)\n╌+\n[^╌]*$'''
+
+# The security pass (2026-11-01) added these two; the bridge's Go tests check
+# them against the captures (bridge/keymaps).
+#
+# A file prompt: the box's title line is "Edit file" or "Create file". The
+# title decides which pattern reads the head: file_match on a file prompt,
+# command_match on any other. A permission card whose path file_match can't
+# read says FILE NOT READ, and any other whose command command_match can't
+# read, COMMAND NOT READ; either offers deny only (fail closed).
+file_prompt = '''^ [A-Z][a-z]+ file\n'''
+
+# O-88 added these two (Claude Code 2.1.316: tool-prompts/; the bridge's Go
+# tests check them against the captures, bridge/keymaps).
+#
+# A fetch prompt: the box's title line is "Fetch" (WebFetch). Its head is
+# the URL, read by url_match alone: a fetch card whose URL it can't read
+# says URL NOT READ, and offers deny only.
+url_prompt = '''^ Fetch\n'''
+
+# A fetch prompt's host as Claude Code names it, from its own parse of the
+# URL ("Claude wants to fetch content from <host>", group 1), and the URL on
+# the "url:" line right under the first ╌ rule, in one piece, with the
+# agent's "prompt:" line next (group 2). The box must hold exactly two runs
+# of ╌, so a ╌ in the agent's prompt text reads none. The bridge reads the
+# URL only if it parses as an http or https URL of that host with no user
+# name, and the "url:" and "prompt:" lines are the only ones of the box that
+# start so (O-88's review): a URL the screen breaks before a line that looks
+# like the next field, moving its host or hiding its rest, reads none. A URL
+# longer than a line wraps in a │ gutter (" │ url: …"), and reads none: the
+# card fails closed. The card shows the bare host on its second line, in
+# place of the "Claude wants to fetch content from" line, and fails closed
+# on a host longer than a line.
+url_match = '''^ Fetch\n Claude wants to fetch content from ([a-z0-9.-]+)\n╌+\n url: ([^\s╌]+)\n prompt: [^╌]*\n╌+\n[^╌]*$'''
+
+# O-90 added these two (Claude Code 2.1.316, the isolated session's run of
+# 2026-11-02: tool-prompts/mcp-*; the bridge's Go tests check them).
+#
+# An MCP call: the box's title line is "Tool use". Its head is read by
+# mcp_match alone: an MCP card whose call it can't read says TOOL NOT READ,
+# and offers deny only.
+mcp_prompt = '''^ Tool use\n'''
+
+# An MCP call's server and tool, as the line under the title names them
+# ("recon — Echo Tool: (MCP)", group 1, without the colon), and its
+# arguments, one " <name>: <value>" line each between the box's two ╌ rules
+# (group 2; a value as JSON, on one line). The box must hold exactly those
+# two runs of ╌. An argument that wraps (its value in a │ gutter under a
+# bare "<name>:"), any other line between the rules, or a tool line without
+# "(MCP)" reads none: the card fails closed. The card shows the server and
+# the tool first, whole (one longer than a line fails closed), then the
+# arguments; the arguments are the head the danger rules read, and the hash
+# covers both, raw.
+mcp_match = '''^ Tool use\n ([^\n╌]+?):? \(MCP\)\n╌+\n((?: [A-Za-z_][A-Za-z0-9_.-]*: [^\n╌│]+\n)+)╌+\n[^╌]*$'''
+
+# Approve presses "1", so a card offers approve only when the real option
+# list confirms that option 1 is a plain "1. Yes" (the cursor may be on it or
+# not; spaces may follow). The real list is after the box's last ╌ rule:
+# between that rule and the question, no line may look like an option (a
+# digit or ❯ first) or hold a ╌, so neither a decoy "Do you want to go?" and
+# "1. Yes" before the rule nor one after the menu can stand in for it (the
+# security pass's review, 2026-11-01). Nothing after "1. Yes" may hold a ╌
+# either, so the rule the pattern starts from is the box's last: a decoy
+# between two rules (a command of several lines, a fetch's prompt text)
+# can't stand in for it (O-88's review). Any other option 1 (a "don't ask
+# again", a new order) fails closed: deny only.
+approve_option = '''(?s)^.*\n╌+\n(?: *(?:[^\s\d❯╌][^\n╌]*)?\n)*? *Do you want to [^\n╌]*\?\n *❯? *1\. Yes *(?:\n[^╌]*)?$'''
+
+# The question line, matched against each line of the box: approve is
+# offered only when exactly one asks it (O-90's review). An MCP call's box
+# holds its server's text (the "About the … :" line and the tool's
+# description) between the last rule and the real question; only the
+# description's │ gutter keeps a question there from being read by
+# approve_option, so a second question line anywhere in the box fails
+# closed. Every captured permission prompt holds exactly one.
+question_match = '''^ *Do you want to [^╌]*\?$'''

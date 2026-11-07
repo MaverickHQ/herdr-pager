@@ -1,0 +1,15 @@
+## herdr-pager firmware dependencies (phase 2 design D2-5, D4; ADR 0004).
+dependencies:
+  idf: ">=5.5,<5.6"
+  lcd349:
+    # The kit, pinned to its public tag (design D2-5; phase 5 requirement 1.4).
+    # Never override_path: builds take the published kit, not a local checkout.
+    git: "https://github.com/MaverickHQ/lcd349-kit.git"
+    path: "components/lcd349"
+    version: "v0.2.2"
+  david-cermak/libssh:
+    # The board's SSH library (phase 0's spike, design D4; LGPL-2.1 as a separate library, ADR 0004).
+    # The board only: on linux, net/ssh_link links the Mac's libssh 0.12.2 through pkg-config.
+    version: "==0.12.2"
+    rules:
+      - if: "target == esp32s3"

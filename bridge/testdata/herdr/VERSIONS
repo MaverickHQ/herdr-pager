@@ -1,0 +1,5 @@
+# herdr, as seen by the recon (capture-claude.sh versions)
+herdr_version = "0.9.3"
+protocol = 22
+schema_version = 1
+source = "herdr --version; herdr api schema --json (.protocol, .schema_version)"

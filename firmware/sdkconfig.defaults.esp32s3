@@ -1,0 +1,24 @@
+# The board's PSRAM, flash and CPU, as the kit's templates/app sets them (its getting-started, step 3).
+CONFIG_SPIRAM=y
+CONFIG_SPIRAM_MODE_OCT=y
+CONFIG_SPIRAM_SPEED_80M=y
+# Static data in PSRAM: lwIP's and Wi-Fi's own, and main's (main/linker.lf), so the tasks fit in internal RAM.
+CONFIG_SPIRAM_ALLOW_BSS_SEG_EXTERNAL_MEMORY=y
+CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y
+CONFIG_ESPTOOLPY_FLASHMODE_QIO=y
+CONFIG_ESPTOOLPY_FLASHFREQ_80M=y
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
+# The board's USB port is the USB Serial/JTAG: the console, the @P lines and the @T lines use it (the kit's template).
+CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y
+# One large app partition (1.5 MB). The pager fits it optimised for size, as phase 0's spike was built
+# (the kit's template has -O2); at ESP-IDF's default -Og it's 1.66 MB and doesn't fit.
+CONFIG_PARTITION_TABLE_SINGLE_APP_LARGE=y
+CONFIG_COMPILER_OPTIMIZATION_SIZE=y
+# A station only: the device dials out and never serves a network (the kit sets WIFI_MODE_STA).
+# CONFIG_ESP_WIFI_SOFTAP_SUPPORT is not set
+# .local host names resolve through getaddrinfo with lwip's one-shot mDNS query (no mdns component).
+CONFIG_LWIP_DNS_SUPPORT_MDNS_QUERIES=y
+# libssh needs pthread threading in mbedTLS; ESP-IDF's default ALT doesn't compile with it (phase 0's spike).
+CONFIG_MBEDTLS_THREADING_C=y
+CONFIG_MBEDTLS_THREADING_PTHREAD=y
+# CONFIG_MBEDTLS_THREADING_ALT is not set

@@ -1,0 +1,1 @@
+{"id":"pager-bridge:agent.read","method":"agent.read","params":{"target":"w1:p1","source":"detection","format":"text"}}

@@ -1,0 +1,41 @@
+CONFIG_FREERTOS_HZ=1000
+CONFIG_LV_COLOR_DEPTH_16=y
+# The pager's fonts (main/platform/fonts.c): ASCII is all it draws.
+CONFIG_LV_FONT_MONTSERRAT_12=y
+CONFIG_LV_FONT_MONTSERRAT_14=y
+CONFIG_LV_FONT_MONTSERRAT_20=y
+CONFIG_LV_FONT_MONTSERRAT_28=y
+# The pager draws objects, labels and buttons only. The default theme links every widget that's on,
+# so the rest are off: about 50 KB of the board's 1.5 MB app partition (sdkconfig.defaults.esp32s3).
+# CONFIG_LV_USE_ANIMIMG is not set
+# CONFIG_LV_USE_ARC is not set
+# CONFIG_LV_USE_ARCLABEL is not set
+# CONFIG_LV_USE_BAR is not set
+# CONFIG_LV_USE_BUTTONMATRIX is not set
+# CONFIG_LV_USE_CALENDAR is not set
+# CONFIG_LV_USE_CANVAS is not set
+# CONFIG_LV_USE_CHART is not set
+# CONFIG_LV_USE_CHECKBOX is not set
+# CONFIG_LV_USE_DROPDOWN is not set
+# CONFIG_LV_USE_IMAGEBUTTON is not set
+# CONFIG_LV_USE_KEYBOARD is not set
+# CONFIG_LV_USE_LED is not set
+# CONFIG_LV_USE_LINE is not set
+# CONFIG_LV_USE_LIST is not set
+# CONFIG_LV_USE_MENU is not set
+# CONFIG_LV_USE_MSGBOX is not set
+# CONFIG_LV_USE_ROLLER is not set
+# CONFIG_LV_USE_SCALE is not set
+# CONFIG_LV_USE_SLIDER is not set
+# CONFIG_LV_USE_SPAN is not set
+# CONFIG_LV_USE_SPINBOX is not set
+# CONFIG_LV_USE_SPINNER is not set
+# CONFIG_LV_USE_SWITCH is not set
+# CONFIG_LV_USE_TEXTAREA is not set
+# CONFIG_LV_USE_TABLE is not set
+# CONFIG_LV_USE_TABVIEW is not set
+# CONFIG_LV_USE_TILEVIEW is not set
+# CONFIG_LV_USE_WIN is not set
+# LVGL's examples and demos aren't linked; some examples use those widgets unguarded.
+# CONFIG_LV_BUILD_EXAMPLES is not set
+# CONFIG_LV_BUILD_DEMOS is not set

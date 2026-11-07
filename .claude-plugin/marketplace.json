@@ -1,0 +1,16 @@
+{
+  "name": "herdr-pager",
+  "owner": {
+    "name": "MaverickHQ"
+  },
+  "metadata": {
+    "description": "Claude Code tooling for herdr-pager, a desk pager for the coding agents in herdr: a skill that checks your setup and explains the pager."
+  },
+  "plugins": [
+    {
+      "name": "herdr-pager",
+      "source": "./plugin",
+      "description": "Set up and check herdr-pager: checks the install, runs pager-bridge's doctor and explains each failed check, opens the setup page for whatever needs you, and explains the pager's screens and codes. It never handles a Wi-Fi password, and never pairs or revokes a pager itself."
+    }
+  ]
+}

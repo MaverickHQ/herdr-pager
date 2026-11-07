@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  pager-bridge serve at login: a launchd user agent (parent 11.4).
+
+  A template: launchd expands neither ~ nor $HOME, so install it with the
+  commands in docs/bridge.md (Run it at login), which fill in __REPO__ (this
+  repository's absolute path, where the guide builds bin/pager-bridge) and
+  __HOME__.
+
+  It restarts serve when it fails, and leaves it stopped when it exits 0 (on
+  SIGTERM, as from launchctl bootout). ProcessType Interactive spares it the
+  resource limits launchd puts on a job without one: its work is paging and
+  verdicts, which have latency budgets (parent N1, N2).
+-->
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>dev.herdr-pager.bridge</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>__REPO__/bin/pager-bridge</string>
+		<string>serve</string>
+	</array>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>HOME</key>
+		<string>__HOME__</string>
+	</dict>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>KeepAlive</key>
+	<dict>
+		<key>SuccessfulExit</key>
+		<false/>
+	</dict>
+	<key>ProcessType</key>
+	<string>Interactive</string>
+	<key>StandardOutPath</key>
+	<string>__HOME__/Library/Logs/herdr-pager/bridge.log</string>
+	<key>StandardErrorPath</key>
+	<string>__HOME__/Library/Logs/herdr-pager/bridge.log</string>
+</dict>
+</plist>

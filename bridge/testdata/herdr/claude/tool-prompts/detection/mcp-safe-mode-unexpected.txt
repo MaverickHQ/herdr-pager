@@ -1,0 +1,40 @@
+$ claude --model claude-haiku-5-5 --safe-mode --setting-sources project --strict-mcp-config --mcp-config /tmp/herdr-pag
+er-recon-state/mcp.json --permission-mode manual
+ ▐▛███▛█   Claude Code v2.1.316
+▝▜██████▀  Haiku 5.5 · Claude Max
+ ▝▝   ▝▝   /private/tmp/herdr-pager-recon
+
+⚠ Safe mode: all customizations are disabled (CLAUDE.md, skills, plugins, hooks, MCP, agents, and more)
+  Restart without --safe-mode to re-enable
+
+▎ Your Max plan includes $100 a month in API credits to power your apps and agents. Claim them at
+▎ https://clau.de/api-credits
+
+❯ Use the WebFetch tool to fetch https://example.com/ and tell me its title. Do nothing else.
+
+⏺ Fetch(https://example.com/)
+  ⎿  Interrupted · What should Claude do instead?
+
+✻ Worked for 3s · done 19:28
+
+❯ Use the Read tool to read the file /etc/shells. Do nothing else.
+
+  Read 1 file (ctrl+o to expand)
+  ⎿  Interrupted · What should Claude do instead?
+
+✻ Cooked for 1s · done 19:31
+
+❯ Use the echo tool of the recon MCP server with the text "hello from the recon". Do nothing else.
+
+⏺ I can't find an echo tool from a "recon" MCP server. A tool search for "recon echo" returned only the Monitor tool,
+  and none of the tools available in this session is a recon echo. I didn't send the text "hello from the recon."
+
+  If the recon MCP server is configured, it may not be connected in this session, or its tools may be named
+  differently. Tell me the server's name or the tool's exact name and I'll try again. I haven't made any other changes.
+
+✻ Sautéed for 4s · done 19:32
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+❯
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+  ⏸ manual mode on · ? for shortcuts

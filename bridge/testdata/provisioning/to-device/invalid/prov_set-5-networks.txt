@@ -1,0 +1,1 @@
+@P {"t":"prov_set","host_key":"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIITD0UXh5rvWrJ9ECHIk1KDIInpniagO0TKg6w/6c/tO","wifi":[{"ssid":"net1","pass":"password1"},{"ssid":"net2","pass":"password2"},{"ssid":"net3","pass":"password3"},{"ssid":"net4","pass":"password4"},{"ssid":"net5","pass":"password5"}]}

@@ -1,0 +1,4 @@
+# Claude Code, as seen by the recon (capture-claude.sh versions, start)
+claude_version = "2.1.306"
+claude_version_line = "2.1.306 (Claude Code)"
+agent = "claude"  # AgentInfo.agent, from agent.list

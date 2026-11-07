@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>herdr-pager setup</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="setup.css">
+<script type="module" src="vendor/esp-web-tools/10.4.0/install-button.js"></script>
+<script src="setup.js" defer></script>
+</head>
+<body>
+
+<div class="notice" id="no-serial" role="note" hidden>
+  <span><b>This browser can’t reach the pager over USB.</b> Flashing and updating need WebSerial: open the address <code>pager-bridge setup</code> printed in Chrome or Edge. Everything else works here.</span>
+</div>
+<div class="notice stopped" id="stopped" role="alert" hidden>
+  <span><b>The setup page has stopped.</b> It stops 5 minutes after its last tab closes, or when <code>pager-bridge setup</code> stops. Run <code>pager-bridge setup</code> again for a new address.</span>
+</div>
+
+<header class="masthead">
+  <div class="mast">
+    <div>
+      <h1 class="wordmark">herdr-pager</h1>
+      <p class="tagline">Set up your pager: a 1990s-style pager for your coding agents</p>
+      <div class="chips">
+        <span class="chip"><span class="dot" id="chip-dot" aria-hidden="true"></span><span id="chip-addr">127.0.0.1</span></span>
+        <span class="chip">one-time token</span>
+        <span class="chip" id="chip-fw">firmware …</span>
+      </div>
+    </div>
+    <nav class="views" role="tablist" aria-label="View">
+      <button class="view-tab" role="tab" id="tab-setup" aria-selected="true" aria-controls="view-setup" data-view="setup">Setup<span class="vt-n" id="vt-count"></span></button>
+      <button class="view-tab" role="tab" id="tab-manage" aria-selected="false" aria-controls="view-manage" data-view="manage">Manage</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="view-setup" role="tabpanel" aria-labelledby="tab-setup">
+    <div class="layout">
+      <nav class="rail" aria-label="Setup steps">
+        <div class="rail-head"><span class="label">Setup</span><span class="rail-count" id="rail-count"></span></div>
+        <ol id="rail-list"></ol>
+        <div class="rail-legend" aria-hidden="true">
+          <div><b>*</b>done</div><div><b>&gt;</b>now</div><div><b>!</b>needs you</div><div><b>.</b>to do</div>
+        </div>
+      </nav>
+      <article class="panel step" id="step" aria-live="polite"></article>
+      <aside class="preview" aria-label="What the pager shows">
+        <div class="pv-head"><span class="label">On the pager</span><span class="pv-chips" id="pv-chips"></span></div>
+        <div id="pv-device"></div>
+        <div class="pv-cap"><div class="pv-state" id="pv-state"></div><p class="pv-text" id="pv-text"></p></div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="view-manage" role="tabpanel" aria-labelledby="tab-manage" hidden>
+    <div id="manage"></div>
+  </section>
+</main>
+
+<section class="dock" id="dock" aria-label="Live output">
+  <div class="dock-bar">
+    <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+    <div class="ttabs" role="tablist" aria-label="Output">
+      <button class="ttab" role="tab" data-tt="bridge" aria-selected="false"><span class="long">Bridge log</span><span class="short">Bridge</span></button>
+      <button class="ttab" role="tab" data-tt="pager" aria-selected="false"><span class="long">Pager (USB)</span><span class="short">Pager</span></button>
+      <button class="ttab" role="tab" data-tt="step" aria-selected="true"><span class="long">Setup’s steps</span><span class="short">Steps</span></button>
+    </div>
+    <div class="dock-last" id="dock-last"></div>
+    <div class="dock-tools">
+      <span class="live tb-hide" id="live"><i></i><b>LIVE</b></span>
+      <button class="tbtn tb-hide" id="t-follow" aria-pressed="true" title="Keep the newest line in view">Follow</button>
+      <button class="tbtn tb-hide" id="t-copy">Copy</button>
+      <button class="tbtn icon" id="t-min" aria-expanded="true" title="Hide the output">▾</button>
+    </div>
+  </div>
+  <div class="term" id="term" role="log" aria-live="off" tabindex="0"></div>
+</section>
+
+</body>
+</html>

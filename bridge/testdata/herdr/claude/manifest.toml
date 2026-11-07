@@ -1,0 +1,388 @@
+# What each of phase 0's Claude Code captures is (phase 2 design D2-7, R2.3).
+# Tests classify the captures through this file, read with
+# bridge/internal/captures, never by their file names. Written 2026-10-22
+# (phase 2, task 1.3) from DETECTION.md, KEYS.md and the captures themselves.
+#
+# Each [[capture]]:
+#   file         the detection read (`agent.read`, source detection), relative
+#                to this folder; "" when not captured
+#   agent        the `agent.get` taken with it; "" when not captured
+#   captured     false for a prompt phase 0 couldn't capture (DETECTION.md
+#                §Not captured): phase 2 treats it as unknown, so its card
+#                offers only jump, and tests skip it
+#   kind         permission; danger (a permission prompt the danger rules
+#                flag: its card is a permission card with risk "danger");
+#                question (no verdicts: jump only); or status (no prompt: the
+#                agent isn't blocked)
+#   prompt       the prompt on screen. Captures of one prompt share it, and
+#                their cards hash equally; a prompt with one capture has
+#                nothing to compare. (shell-repeat's box is identical to
+#                shell's, but it's a second prompt, with its own seq.)
+#   prompt_type  shell, file-edit, file-create, file-read, web-fetch,
+#                mcp-tool, question, plan-approval, folder-trust, or none
+#   title        the prompt box's title line as captured, without its leading
+#                space: the card's summary before sanitizing
+#   command      shell prompts: the command `command_match` extracts
+#   path         file prompts (file-edit, file-create, file-read): the path
+#                `file_match` extracts
+#   url          fetch prompts: the URL `url_match` extracts, unless unread
+#   tool, args   MCP calls: the server and the tool, and the argument lines
+#                (each trimmed), as `mcp_match` extracts them, unless unread
+#   unread       true for a permission prompt the keymap can't read in full:
+#                its card fails closed (deny and jump only), and it names no
+#                command, path, URL, tool or arguments
+#   label        danger prompts: the danger rule's label
+#
+# The tool prompts (open item O-88) are a later set, in tool-prompts/, from
+# Claude Code 2.1.316 (tool-prompts/VERSIONS; DETECTION.md §The tool
+# prompts); they follow phase 0's.
+
+[[capture]]
+file        = "detection/shell-0s.txt"
+agent       = "get/shell-0s.json"
+captured    = true
+kind        = "permission"
+prompt      = "shell"
+prompt_type = "shell"
+title       = "Bash command"
+command     = "touch approved.txt"
+
+[[capture]]
+file        = "detection/shell-2s.txt"
+agent       = "get/shell-2s.json"
+captured    = true
+kind        = "permission"
+prompt      = "shell"
+prompt_type = "shell"
+title       = "Bash command"
+command     = "touch approved.txt"
+
+[[capture]]
+file        = "detection/shell-70s.txt"
+agent       = "get/shell-70s.json"
+captured    = true
+kind        = "permission"
+prompt      = "shell"
+prompt_type = "shell"
+title       = "Bash command"
+command     = "touch approved.txt"
+
+[[capture]]
+file        = "detection/shell-repeat.txt"
+agent       = "get/shell-repeat.json"
+captured    = true
+kind        = "permission"
+prompt      = "shell-repeat"
+prompt_type = "shell"
+title       = "Bash command"
+command     = "touch approved.txt"
+
+[[capture]]
+file        = "detection/long-prompt.txt"
+agent       = "get/long-prompt.json"
+captured    = true
+kind        = "permission"
+prompt      = "long-prompt"
+prompt_type = "shell"
+title       = "Bash command"
+command     = "ping -c 100 127.0.0.1"
+
+[[capture]]
+file        = "detection/danger.txt"
+agent       = "get/danger.json"
+captured    = true
+kind        = "danger"
+prompt      = "danger"
+prompt_type = "shell"
+title       = "Bash command"
+command     = "git -C work push --force"
+label       = "FORCE PUSH"
+
+[[capture]]
+file        = "detection/file-edit-0s.txt"
+agent       = "get/file-edit-0s.json"
+captured    = true
+kind        = "permission"
+prompt      = "file-edit"
+prompt_type = "file-edit"
+title       = "Edit file"
+path        = "notes.txt"
+
+[[capture]]
+file        = "detection/file-edit-2s.txt"
+agent       = "get/file-edit-2s.json"
+captured    = true
+kind        = "permission"
+prompt      = "file-edit"
+prompt_type = "file-edit"
+title       = "Edit file"
+path        = "notes.txt"
+
+[[capture]]
+file        = "detection/file-edit-70s.txt"
+agent       = "get/file-edit-70s.json"
+captured    = true
+kind        = "permission"
+prompt      = "file-edit"
+prompt_type = "file-edit"
+title       = "Edit file"
+path        = "notes.txt"
+
+[[capture]]
+file        = "detection/file-create-0s.txt"
+agent       = "get/file-create-0s.json"
+captured    = true
+kind        = "permission"
+prompt      = "file-create"
+prompt_type = "file-create"
+title       = "Create file"
+path        = "created.txt"
+
+[[capture]]
+file        = "detection/file-create-2s.txt"
+agent       = "get/file-create-2s.json"
+captured    = true
+kind        = "permission"
+prompt      = "file-create"
+prompt_type = "file-create"
+title       = "Create file"
+path        = "created.txt"
+
+[[capture]]
+file        = "detection/file-create-70s.txt"
+agent       = "get/file-create-70s.json"
+captured    = true
+kind        = "permission"
+prompt      = "file-create"
+prompt_type = "file-create"
+title       = "Create file"
+path        = "created.txt"
+
+[[capture]]
+file        = "detection/question-0s.txt"
+agent       = "get/question-0s.json"
+captured    = true
+kind        = "question"
+prompt      = "question"
+prompt_type = "question"
+title       = "☐ Colour"
+
+[[capture]]
+file        = "detection/question-2s.txt"
+agent       = "get/question-2s.json"
+captured    = true
+kind        = "question"
+prompt      = "question"
+prompt_type = "question"
+title       = "☐ Colour"
+
+[[capture]]
+file        = "detection/question-70s.txt"
+agent       = "get/question-70s.json"
+captured    = true
+kind        = "question"
+prompt      = "question"
+prompt_type = "question"
+title       = "☐ Colour"
+
+[[capture]]
+file        = "detection/plan-0s.txt"
+agent       = "get/plan-0s.json"
+captured    = true
+kind        = "question"
+prompt      = "plan"
+prompt_type = "plan-approval"
+title       = "Ready to code?"
+
+[[capture]]
+file        = "detection/plan-2s.txt"
+agent       = "get/plan-2s.json"
+captured    = true
+kind        = "question"
+prompt      = "plan"
+prompt_type = "plan-approval"
+title       = "Ready to code?"
+
+[[capture]]
+file        = "detection/plan-70s.txt"
+agent       = "get/plan-70s.json"
+captured    = true
+kind        = "question"
+prompt      = "plan"
+prompt_type = "plan-approval"
+title       = "Ready to code?"
+
+# The folder-trust prompt: not shown by Claude Code 2.1.306 (DETECTION.md
+# §Not captured; its keys are in KEYS.md).
+[[capture]]
+file        = ""
+agent       = ""
+captured    = false
+kind        = "question"
+prompt      = "folder-trust"
+prompt_type = "folder-trust"
+
+# Not prompts: `ping` running (herdr: working), and just after it was
+# interrupted (herdr's detection: idle; agent_status: done).
+[[capture]]
+file        = "detection/working-now.txt"
+agent       = "get/working-now.json"
+captured    = true
+kind        = "status"
+prompt      = "working"
+prompt_type = "none"
+
+[[capture]]
+file        = "detection/interrupted-now.txt"
+agent       = "get/interrupted-now.json"
+captured    = true
+kind        = "status"
+prompt      = "interrupted"
+prompt_type = "none"
+
+# The tool prompts (O-88, Claude Code 2.1.316). WebFetch of the example
+# domain; the same with a URL longer than a line, which wraps in a │ gutter,
+# so url_match reads no URL and its card fails closed.
+[[capture]]
+file        = "tool-prompts/detection/webfetch-0s.txt"
+agent       = "tool-prompts/get/webfetch-0s.json"
+captured    = true
+kind        = "permission"
+prompt      = "webfetch"
+prompt_type = "web-fetch"
+title       = "Fetch"
+url         = "https://example.com/"
+
+[[capture]]
+file        = "tool-prompts/detection/webfetch-2s.txt"
+agent       = "tool-prompts/get/webfetch-2s.json"
+captured    = true
+kind        = "permission"
+prompt      = "webfetch"
+prompt_type = "web-fetch"
+title       = "Fetch"
+url         = "https://example.com/"
+
+[[capture]]
+file        = "tool-prompts/detection/webfetch-70s.txt"
+agent       = "tool-prompts/get/webfetch-70s.json"
+captured    = true
+kind        = "permission"
+prompt      = "webfetch"
+prompt_type = "web-fetch"
+title       = "Fetch"
+url         = "https://example.com/"
+
+[[capture]]
+file        = "tool-prompts/detection/webfetch-long.txt"
+agent       = "tool-prompts/get/webfetch-long.json"
+captured    = true
+kind        = "permission"
+prompt      = "webfetch-long"
+prompt_type = "web-fetch"
+title       = "Fetch"
+unread      = true
+
+# Read of a file outside the recon folder.
+[[capture]]
+file        = "tool-prompts/detection/read-outside-0s.txt"
+agent       = "tool-prompts/get/read-outside-0s.json"
+captured    = true
+kind        = "permission"
+prompt      = "read-outside"
+prompt_type = "file-read"
+title       = "Read file"
+path        = "/etc/shells"
+
+[[capture]]
+file        = "tool-prompts/detection/read-outside-2s.txt"
+agent       = "tool-prompts/get/read-outside-2s.json"
+captured    = true
+kind        = "permission"
+prompt      = "read-outside"
+prompt_type = "file-read"
+title       = "Read file"
+path        = "/etc/shells"
+
+[[capture]]
+file        = "tool-prompts/detection/read-outside-70s.txt"
+agent       = "tool-prompts/get/read-outside-70s.json"
+captured    = true
+kind        = "permission"
+prompt      = "read-outside"
+prompt_type = "file-read"
+title       = "Read file"
+path        = "/etc/shells"
+
+# Not a prompt: the MCP prompt wasn't captured (DETECTION.md §The tool
+# prompts): asked to call the stub's echo tool, the agent found none, since
+# --safe-mode loads no MCP server (herdr: idle; agent_status: done).
+[[capture]]
+file        = "tool-prompts/detection/mcp-safe-mode-unexpected.txt"
+agent       = "tool-prompts/get/mcp-safe-mode-unexpected.json"
+captured    = true
+kind        = "status"
+prompt      = "mcp-not-loaded"
+prompt_type = "none"
+
+# An MCP call (O-90, 2026-11-02, the isolated session with the recon's own
+# sign-in): the stub's echo tool; the same with an argument longer than a
+# line, which wraps in a │ gutter, so mcp_match reads none and its card
+# fails closed.
+[[capture]]
+file        = "tool-prompts/detection/mcp-0s.txt"
+agent       = "tool-prompts/get/mcp-0s.json"
+captured    = true
+kind        = "permission"
+prompt      = "mcp"
+prompt_type = "mcp-tool"
+title       = "Tool use"
+tool        = "recon — Echo Tool"
+args        = 'text: "hello from the recon"'
+
+[[capture]]
+file        = "tool-prompts/detection/mcp-2s.txt"
+agent       = "tool-prompts/get/mcp-2s.json"
+captured    = true
+kind        = "permission"
+prompt      = "mcp"
+prompt_type = "mcp-tool"
+title       = "Tool use"
+tool        = "recon — Echo Tool"
+args        = 'text: "hello from the recon"'
+
+[[capture]]
+file        = "tool-prompts/detection/mcp-70s.txt"
+agent       = "tool-prompts/get/mcp-70s.json"
+captured    = true
+kind        = "permission"
+prompt      = "mcp"
+prompt_type = "mcp-tool"
+title       = "Tool use"
+tool        = "recon — Echo Tool"
+args        = 'text: "hello from the recon"'
+
+[[capture]]
+file        = "tool-prompts/detection/mcp-long.txt"
+agent       = "tool-prompts/get/mcp-long.json"
+captured    = true
+kind        = "permission"
+prompt      = "mcp-long"
+prompt_type = "mcp-tool"
+title       = "Tool use"
+unread      = true
+
+# An MCP call of a tool whose description runs over several lines, with
+# blank lines and markdown (O-90's review, 2026-11-02): Claude Code shows
+# its first two lines in the │ gutter, cut with "…", then "(ctrl+o to
+# expand description)" without one.
+[[capture]]
+file        = "tool-prompts/detection/mcp-desc.txt"
+agent       = "tool-prompts/get/mcp-desc.json"
+captured    = true
+kind        = "permission"
+prompt      = "mcp-desc"
+prompt_type = "mcp-tool"
+title       = "Tool use"
+tool        = "recon — Note Tool"
+args        = 'text: "hello from the recon"'

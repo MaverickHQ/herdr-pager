@@ -1,0 +1,37 @@
+# Dependabot watches the workflows' actions and the bridge's Go modules
+# (phase 5 requirement 4.2). The public repository is an export of a private
+# working copy, one commit per version (ADR 0010), so its pull requests are
+# notices: the update is made, checked with valvur and pinned in the working
+# copy, and arrives with the next export.
+#
+# Not watched, so checked by hand (and with valvur) when ESP-IDF or the kit
+# moves:
+# - ci.yml's ESP-IDF container and its digest: Dependabot's docker ecosystem
+#   reads Dockerfiles, not a workflow's container: (dependabot-core issue 5541);
+# - ci.yml's emulator job: its ESP-IDF tag and commit, and lcd349's version;
+# - the firmware's components, pinned in firmware/main/idf_component.yml, which
+#   Dependabot can't read.
+# tools/measure uses only Go's standard library.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    # A release must be a week old before it's proposed (valvur's
+    # dependabot-cooldown): time for a bad one to be found and pulled.
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ["*"]
+  - package-ecosystem: gomod
+    directory: /bridge
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      golang-x:
+        patterns:
+          - "golang.org/x/*"

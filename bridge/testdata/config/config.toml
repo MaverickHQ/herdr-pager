@@ -1,0 +1,6 @@
+# Every setting, each away from its default (parent design §Data models).
+# There's no poll interval: the bridge polls herdr every second.
+listen       = "127.0.0.1:2299"
+herdr_socket = "/tmp/hp-test/herdr.sock"
+idle_timeout = "90s"
+log_level    = "debug"

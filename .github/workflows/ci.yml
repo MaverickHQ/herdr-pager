@@ -1,0 +1,149 @@
+name: ci
+
+# Every push, on any branch (the red-CI check's throwaway branch included), and
+# every pull request (phase 5 requirement 4.1).
+#
+# Every action is pinned by commit SHA, with its release in the comment, and the
+# ESP-IDF container by digest (phase 5 requirement 4.2). The pins are
+# lcd349-kit's, from its ci.yml and release.yml at v0.2.2.
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  bridge:
+    name: Bridge (macOS arm64)
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - name: The runner is macOS on arm64
+        run: |
+          if [ "$(uname -m)" != arm64 ]; then
+            echo "::error::this runner is $(uname -m), not arm64"
+            exit 1
+          fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: bridge/go.mod
+          cache-dependency-path: bridge/go.sum
+      - name: go vet
+        working-directory: bridge
+        run: go vet ./...
+      # A temporary HOME and a fake herdr: the suite never needs a real one.
+      - name: go test
+        working-directory: bridge
+        run: go test -count=1 ./...
+
+  emulator:
+    name: Emulator suite (macOS arm64)
+    runs-on: macos-15
+    # ESP-IDF's clone and install take about 10 minutes, the suite up to 30.
+    timeout-minutes: 60
+    # Keep IDF_RELEASE in step with host-tests' container. Not ESP_IDF_VERSION:
+    # that is ESP-IDF's own variable, which its export sets to "5.5".
+    env:
+      IDF_RELEASE: v5.5.6
+      # The commit tag v5.5.6 names (refs/tags/v5.5.6^{} in a clone of
+      # espressif/esp-idf, the Mac's ~/esp/v5.5.6/esp-idf).
+      IDF_RELEASE_COMMIT: 880a203ae603d08a94d06aa01e0d6761958e5e9e
+      LCD349_VERSION: v0.2.2
+    steps:
+      - name: The runner is macOS on arm64
+        run: |
+          if [ "$(uname -m)" != arm64 ]; then
+            echo "::error::this runner is $(uname -m), not arm64"
+            exit 1
+          fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: bridge/go.mod
+          cache-dependency-path: bridge/go.sum
+      # The emulator links the Mac's libssh through pkg-config
+      # (firmware/main/CMakeLists.txt). Python 3.12 is the Mac's, for ESP-IDF;
+      # it stays first on PATH, because export.sh picks ESP-IDF's Python
+      # environment by the version of python3 it finds.
+      - name: libssh, pkg-config and Python 3.12 from Homebrew
+        run: |
+          brew install libssh pkgconf python@3.12
+          echo "libssh $(pkg-config --modversion libssh)"
+          echo "$(brew --prefix python@3.12)/libexec/bin" >> "$GITHUB_PATH"
+      # Where lcd349 and firmware/test_host/run.sh look for it. CMake and ninja
+      # are ESP-IDF's own, at the versions and checksums in its tools.json.
+      - name: ESP-IDF ${{ env.IDF_RELEASE }}
+        run: |
+          idf="$HOME/esp/$IDF_RELEASE/esp-idf"
+          git clone --branch "$IDF_RELEASE" --depth 1 --recursive --shallow-submodules \
+            https://github.com/espressif/esp-idf.git "$idf"
+          commit=$(git -C "$idf" rev-parse HEAD)
+          if [ "$commit" != "$IDF_RELEASE_COMMIT" ]; then
+            echo "::error::ESP-IDF $IDF_RELEASE is $commit, not $IDF_RELEASE_COMMIT"
+            exit 1
+          fi
+          "$idf/install.sh" esp32s3
+          python3 "$idf/tools/idf_tools.py" install cmake ninja
+          echo "IDF_PATH=$idf" >> "$GITHUB_ENV"
+      # Through Go's module proxy, checked against its checksum database.
+      - name: lcd349 ${{ env.LCD349_VERSION }}
+        run: |
+          GOBIN="$RUNNER_TEMP/bin" go install "github.com/MaverickHQ/lcd349-kit/cmd/lcd349@$LCD349_VERSION"
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/bin/lcd349" --version
+      - name: The firmware, for the emulator
+        run: lcd349 build -C firmware
+      - name: The emulator suite
+        working-directory: bridge
+        env:
+          PAGER_EMUTEST: "1"
+        run: go test -count=1 -timeout 30m ./emutest/...
+      # A golden that doesn't match leaves its screenshot and diff here.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: failure()
+        with:
+          name: emutest-out
+          path: bridge/emutest/out/
+          if-no-files-found: ignore
+
+  host-tests:
+    name: Firmware host tests (ESP-IDF v5.5.6)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    # Docker Hub's index digest for v5.5.6 (Ubuntu 24.04): change both together,
+    # and the emulator job's IDF_RELEASE and IDF_RELEASE_COMMIT with them.
+    container: espressif/idf:v5.5.6@sha256:bf72fe7a15c22849a9a94147301165a545fb8905d97c176cf748e3e4614cac84
+    env:
+      # Ubuntu's snapshot of its archive on this date: apt installs exactly the
+      # version below for good.
+      APT_SNAPSHOT: 20261030T000000Z
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # The steps run as root, but the checkout belongs to the runner's user, so
+      # git refuses it ("dubious ownership"); ESP-IDF's version lookup runs git
+      # in it.
+      - name: Trust the checkout
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      # ESP-IDF's linux target needs libbsd on Linux.
+      - name: linux target prerequisites
+        run: |
+          apt-get update --snapshot "$APT_SNAPSHOT"
+          apt-get install -y --no-install-recommends --snapshot "$APT_SNAPSHOT" libbsd-dev=0.12.1-1build1.1
+      # ESP-IDF's environment first, in bash, as the kit's host tests do: then
+      # run.sh finds idf.py and doesn't source export.sh under the image's sh.
+      # A hang (the linux target can deadlock) must fail, not stall CI.
+      - name: Host tests
+        timeout-minutes: 15
+        shell: bash
+        run: |
+          . "$IDF_PATH/export.sh"
+          firmware/test_host/run.sh

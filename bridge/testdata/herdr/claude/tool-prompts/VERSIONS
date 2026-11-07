@@ -1,0 +1,4 @@
+# Claude Code and herdr, as seen by the recon's tool prompts (capture-claude.sh tool-versions)
+claude_version = "2.1.316"
+claude_version_line = "2.1.316 (Claude Code)"
+herdr_version = "0.9.3"

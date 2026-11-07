@@ -1,0 +1,1 @@
+@P {"t":"prov_offer","name":"pager-01","host":"studio-mac.local","port":2277,"host_key":"ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBCAa0MmoCy0ZDeiqO1Cs7HXUbAH4VzjX0Em6zzpiE1I3VsRSmJWTgC8LdILCyA6+uUom8IOdRoREWODIw/MUhJk=","host_name":"studio-mac"}

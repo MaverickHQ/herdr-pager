@@ -1,0 +1,26 @@
+{
+  "id": "cli:agent:list",
+  "result": {
+    "agents": [
+      {
+        "agent": "claude",
+        "agent_status": "done",
+        "completion_seq": 5,
+        "cwd": "/private/tmp/herdr-pager-recon",
+        "focused": false,
+        "foreground_cwd": "/private/tmp/herdr-pager-recon",
+        "interactive_ready": true,
+        "name": "recon",
+        "pane_id": "w1:p1",
+        "revision": 2,
+        "state_change_seq": 5,
+        "tab_id": "w1:t1",
+        "terminal_id": "term_65e59fc19e7cb1",
+        "terminal_title": "✳ Touch approved.txt command",
+        "terminal_title_stripped": "Touch approved.txt command",
+        "workspace_id": "w1"
+      }
+    ],
+    "type": "agent_list"
+  }
+}

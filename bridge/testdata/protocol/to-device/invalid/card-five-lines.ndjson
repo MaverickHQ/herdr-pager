@@ -1,0 +1,1 @@
+{"t":"card","id":16,"pane":"w2:p6","st":"blocked","seq":27,"hash":"1f9b3fad0829b9c12f5c5eac70de15a6a06e5b416734210b519e08fe82b7ec09","kind":"permission","summary":"Tool use","lines":["github - create_issue","owner: \"octo\"","repo: \"hello\"","title: \"Fix the build\"","body: \"and more\""],"can":["approve","deny","jump"]}

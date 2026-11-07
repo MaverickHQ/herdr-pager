@@ -1,0 +1,20 @@
+{
+  "name": "herdr-pager",
+  "version": "1.0.0",
+  "description": "Set up and check herdr-pager, a desk pager for the coding agents in herdr: checks the install, runs pager-bridge's doctor and explains each failed check, opens the setup page for whatever needs you, and explains the pager's screens and codes. It never handles a Wi-Fi password, and never pairs or revokes a pager itself.",
+  "author": {
+    "name": "MaverickHQ"
+  },
+  "homepage": "https://github.com/MaverickHQ/herdr-pager",
+  "repository": "https://github.com/MaverickHQ/herdr-pager",
+  "license": "Apache-2.0",
+  "keywords": [
+    "herdr",
+    "pager",
+    "esp32",
+    "esp32-s3",
+    "claude-code",
+    "agents",
+    "setup"
+  ]
+}

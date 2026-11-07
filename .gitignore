@@ -1,0 +1,23 @@
+build/
+managed_components/
+sdkconfig
+sdkconfig.old
+.security-scan/
+*.elf
+.DS_Store
+spikes/*/build*/
+.claude/worktrees/
+.claude/settings.local.json
+build-emu/
+# The emulator harness's run output, and the images left beside goldens on a mismatch (the kit's names).
+bridge/emutest/out/
+*_actual.png
+*_diff.png
+# The bridge binary README.md builds, any local env file, and run logs. The spike's serial logs (spikes/ssh_esp/logs/)
+# were committed before this line and stay tracked.
+/bin/
+.env
+*.log
+
+# Python bytecode (tools/media).
+__pycache__/

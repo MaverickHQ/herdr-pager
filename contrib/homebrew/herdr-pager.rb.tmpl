@@ -1,0 +1,54 @@
+# herdr-pager's Homebrew formula, for the tap MaverickHQ/homebrew-tap:
+#   brew install maverickhq/tap/herdr-pager
+#   pager-bridge setup
+#
+# The release workflow writes it from contrib/homebrew/herdr-pager.rb.tmpl in
+# github.com/MaverickHQ/herdr-pager (`tools/release/formula`), pinned to the
+# archive that release built and published; the maintainer copies it to the
+# tap. Edit the template there, not this file.
+class HerdrPager < Formula
+  desc "Pager for the herdr agent console: the bridge, and the firmware it flashes"
+  homepage "https://github.com/MaverickHQ/herdr-pager"
+  url "{{.URL}}"
+  sha256 "{{.SHA256}}"
+  version "{{.Version}}"
+  # herdr-pager's own licence. The archive's licenses/ and THIRD_PARTY.md hold
+  # the third-party software's, libssh's LGPL-2.1 among them; the release
+  # carries libssh's source.
+  license "Apache-2.0"
+
+  # The bridge is built for macOS on Apple Silicon only.
+  depends_on arch: :arm64
+  depends_on :macos
+
+  def install
+    bin.install "bin/pager-bridge"
+    # The firmware's images and ESP Web Tools' manifest, which the setup page
+    # flashes: the bridge finds them at ../share/herdr-pager/firmware.
+    share.install "share/herdr-pager"
+    doc.install "THIRD_PARTY.md", "licenses"
+  end
+
+  def caveats
+    <<~EOS
+      Set up the pager with its setup page, in Chrome or Edge:
+        pager-bridge setup
+      It flashes the pager over USB, joins it to your Wi-Fi, pairs it, and can
+      run the bridge at login (brew services start herdr-pager).
+    EOS
+  end
+
+  # brew services start herdr-pager: pager-bridge serve at login, restarted if
+  # it fails, left stopped when it exits cleanly.
+  service do
+    run [opt_bin/"pager-bridge", "serve"]
+    keep_alive successful_exit: false
+    process_type :interactive
+    log_path var/"log/herdr-pager.log"
+    error_log_path var/"log/herdr-pager.log"
+  end
+
+  test do
+    assert_match "pager-bridge #{version}", shell_output("#{bin}/pager-bridge --version")
+  end
+end
