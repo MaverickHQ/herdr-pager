@@ -11,15 +11,17 @@ name: release
 #             after the bridge's own vet and tests
 #   pack      tools/release: pack (the archive, libssh's source as the
 #             component manager fetched it, THIRD_PARTY.md, SHA256SUMS),
-#             verify, and the Homebrew formula; on a tag, the CHANGELOG entry
-#   publish   on a tag only: build attestations and the GitHub release
+#             verify, the Homebrew formula, and the CHANGELOG entry (on every
+#             run, so a dry run finds a missing entry before the tag is public)
+#   publish   on a pushed tag only (a run by hand publishes nothing, even one
+#             started from a tag): build attestations and the GitHub release
 #
 # Its artefacts: release (exactly the release's files; a dry run's are checked
 # again with `cd tools/release && go run ./verify <dir>`), formula
-# (herdr-pager.rb, which the owner copies to MaverickHQ/homebrew-tap) and, on
-# a tag, notes.
+# (herdr-pager.rb, which the owner copies to MaverickHQ/homebrew-tap) and
+# notes.
 #
-# Only the publish job, which runs on a tag alone, can write: it runs no code
+# Only the publish job, which runs on a pushed tag alone, can write: it runs no code
 # from the repository, only the attestation action and gh on the files the
 # read-only jobs built and checked, and only when dist/ holds exactly the
 # release's files.
@@ -241,9 +243,10 @@ jobs:
           path: ${{ runner.temp }}/formula/herdr-pager.rb
           if-no-files-found: error
       # The release's notes: CHANGELOG.md's entry for the version, headed
-      # "## v<version>" or "## <version>" (a date may follow).
+      # "## v<version>" or "## <version>" (a date may follow). Checked on every
+      # run, the dry run included: a bad entry found only on the tag would need
+      # a public tag deleted, or a new version.
       - name: The CHANGELOG entry
-        if: github.ref_type == 'tag'
         run: |
           mkdir -p "$RUNNER_TEMP/notes"
           awk -v v="$VERSION" '
@@ -258,7 +261,6 @@ jobs:
             exit 1
           fi
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        if: github.ref_type == 'tag'
         with:
           name: notes
           path: ${{ runner.temp }}/notes/notes.md
@@ -266,7 +268,9 @@ jobs:
 
   publish:
     name: Attestations and the release
-    if: github.ref_type == 'tag'
+    # A pushed tag, never a run by hand: workflow_dispatch can be started from
+    # a tag too, and ref_type alone would then publish a dry run.
+    if: github.event_name == 'push' && github.ref_type == 'tag'
     needs: [version, pack]
     runs-on: ubuntu-24.04
     timeout-minutes: 15

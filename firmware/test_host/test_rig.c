@@ -44,6 +44,14 @@ void rig_event(app_ms_t t, const app_event_t *ev)
     handle(ev);
 }
 
+void rig_event_before_deadline(app_ms_t t, const app_event_t *ev)
+{
+    if (t > rig.now) {
+        rig.now = t;
+    }
+    handle(ev);
+}
+
 void rig_boot(bool paired)
 {
     rig_boot_seed(paired, 1);

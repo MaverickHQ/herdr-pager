@@ -10,7 +10,9 @@ import (
 
 // webFiles are the page's own files and the vendored ESP Web Tools (design
 // §The setup page, Assets): web/index.html, its script and its style, its
-// font and the pager's screens, and web/vendor/esp-web-tools/<version>/.
+// font and the pager's screens, and web/esp-web-tools/<version>/. Never under
+// a folder named vendor: a module zip leaves those out, so a bridge from `go
+// install` would build without them (TestTheModuleZipLeavesNothingOut).
 //
 //go:embed web
 var webFiles embed.FS

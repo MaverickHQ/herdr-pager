@@ -71,3 +71,39 @@ func TestProvisionPassesThePagersLog(t *testing.T) {
 		}
 	}
 }
+
+// TestProvisionHidesAnEscapedPassword: a password with a character JSON
+// escapes reaches the pager only in its escaped form, so a console echoing
+// the prov_set sends back that form, never the raw one; Options.Log hides
+// it too (requirement 2.6; phase 5 task 10.1's review: no test password had
+// such a character).
+func TestProvisionHidesAnEscapedPassword(t *testing.T) {
+	peer, tty := openPeer(t)
+	device{hello: "to-tool/valid/prov_hello.txt", result: "to-tool/valid/prov_result-ok.txt", backlog: bootLog, echo: "> "}.play(t, peer)
+	hostKey, path := bridge(t)
+	o := options(t, tty, hostKey, path, &bytes.Buffer{})
+	o.Networks = []Network{{SSID: "HomeNet-2G", Pass: `otter"quokka\42`}}
+	var mu sync.Mutex
+	var got []string
+	o.Log = func(line string) {
+		mu.Lock()
+		got = append(got, line)
+		mu.Unlock()
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := Run(ctx, o); err != nil {
+		t.Fatalf("Run: %v", err)
+	}
+
+	mu.Lock()
+	defer mu.Unlock()
+	if !slices.Contains(got, "(a line holding a Wi-Fi password was hidden)") {
+		t.Errorf("Log got %q; want the echoed prov_set hidden", got)
+	}
+	for _, l := range got {
+		if strings.Contains(l, "quokka") {
+			t.Errorf("Log got a line holding the password: %q", l)
+		}
+	}
+}

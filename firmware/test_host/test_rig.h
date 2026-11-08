@@ -31,6 +31,9 @@ void rig_boot_seed(bool paired, uint32_t seed);
 void rig_at(app_ms_t t);
 
 void rig_event(app_ms_t t, const app_event_t *ev);
+/** Hands ev over at t before any deadline due by then, as the platform's pump does with a queued event
+ * (main/platform/pump.c: the queue first, the deadline only when it's empty). */
+void rig_event_before_deadline(app_ms_t t, const app_event_t *ev);
 void rig_line(app_ms_t t, const char *line);
 void rig_line_n(app_ms_t t, const char *data, size_t len);
 /** Feeds bridge/testdata/protocol/<rel> as a line. */

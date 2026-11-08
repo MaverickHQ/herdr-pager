@@ -19,7 +19,7 @@ import (
 // in THIRD_PARTY.md", found missing before 7.3's export (2026-11-07).
 func TestTheLicencesCoverTheSetupPagesBundle(t *testing.T) {
 	repo := filepath.Join("..", "..", "..", "..")
-	locks, err := filepath.Glob(filepath.Join(repo, "bridge", "internal", "setup", "web", "vendor", "esp-web-tools", "*", "package-lock.json"))
+	locks, err := filepath.Glob(filepath.Join(repo, "bridge", "internal", "setup", "web", "esp-web-tools", "*", "package-lock.json"))
 	if err != nil || len(locks) != 1 {
 		t.Fatalf("the vendored ESP Web Tools' lock file: %v %v; want one", locks, err)
 	}

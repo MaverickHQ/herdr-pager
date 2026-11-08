@@ -97,7 +97,7 @@ func TestThePageHasNoInlineScript(t *testing.T) {
 			continue
 		}
 		text := string(data)
-		ours := !strings.HasPrefix(name, "vendor/")
+		ours := !strings.HasPrefix(name, "esp-web-tools/")
 		refer := func(ref string) {
 			if p, ok := local(name, ref); ok {
 				if _, done := referenced[p]; !done {
@@ -180,7 +180,7 @@ func TestThePageHasNoInlineScript(t *testing.T) {
 	}
 	loadsESPWebTools := false
 	for name := range seen {
-		loadsESPWebTools = loadsESPWebTools || (strings.HasPrefix(name, "vendor/esp-web-tools/") && strings.HasSuffix(name, "/install-button.js"))
+		loadsESPWebTools = loadsESPWebTools || (strings.HasPrefix(name, "esp-web-tools/") && strings.HasSuffix(name, "/install-button.js"))
 	}
 	if !loadsESPWebTools {
 		t.Error("the page doesn't load the vendored ESP Web Tools' install-button.js")
@@ -213,7 +213,7 @@ func TestThePageHasNoInlineScript(t *testing.T) {
 		}
 	}
 	// A folder is no listing of its files.
-	for _, dir := range []string{"/vendor/", "/vendor/esp-web-tools/", "/assets/"} {
+	for _, dir := range []string{"/esp-web-tools/", "/esp-web-tools/10.4.0/", "/assets/"} {
 		if resp := g.do(g.request(http.MethodGet, dir, nil)); resp.StatusCode != http.StatusNotFound {
 			t.Errorf("GET %s: %d; want 404, no listing", dir, resp.StatusCode)
 		}

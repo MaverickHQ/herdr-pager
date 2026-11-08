@@ -370,6 +370,19 @@ static void test_prov_confirm_takes_only_a_press_in_its_window(void)
     rig_event(1000 + CONFIRM_MS - 1, &up);
     TEST_ASSERT_FALSE(any_store());
     TEST_ASSERT_EQUAL_STRING(fixture("to-tool/valid/prov_result-timeout.txt"), last_result());
+
+    /* A prov_set handed over after BOOT's 30 s, before the deadline call (the pump takes a queued line first):
+     * taken without a second press only within the 30 s (requirement 2.9, ADR 0011), so it's a timeout, and
+     * nothing kept (phase 5 task 10.1's review). */
+    boot_unpaired();
+    offer_and_boot(1000, "to-device/valid/prov_offer.txt");
+    rig_clear_log();
+    app_event_t late = {.kind = APP_EV_PROV_LINE};
+    late.line.data = fixture("to-device/valid/prov_set.txt");
+    late.line.len = strlen(late.line.data);
+    rig_event_before_deadline(2000 + SHORT + CONFIRM_MS + 100, &late);
+    TEST_ASSERT_FALSE(any_store());
+    TEST_ASSERT_EQUAL_STRING(fixture("to-tool/valid/prov_result-timeout.txt"), last_result());
 }
 
 static void test_private_key_never_in_a_line(void)

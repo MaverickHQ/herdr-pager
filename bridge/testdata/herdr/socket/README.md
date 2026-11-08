@@ -25,7 +25,7 @@ Every `request*`, `ok*` and `error*` file except the two deliberately invalid re
 | `agent.read/error-agent-not-found.json` | `GH:src/app/agents.rs` L293-301 and `GH:src/app/api/agents.rs` L384-390 | CONFIRMED |
 | `agent.send_keys/request.json` | `GH:src/api/schema/agents.rs` L19-23; `["1"]` is the approve key from phase 0 `claude/KEYS.md` | CONFIRMED |
 | `agent.send_keys/ok.json` | `GH:src/app/api/agents.rs` L372 (`ResponseResult::Ok {}`, so `{"type":"ok"}`) | CONFIRMED |
-| `agent.send_keys/error-invalid-key.json` | `GH:src/app/api/agents.rs` L361-366 (`unsupported key {key}`, the first bad key as sent; no bytes are written). `home` is rejected by `parse_key_combo` (`GH:src/config/keybinds.rs` L1281-1339), and herdr-sidebar saw it live (`~/herdr-plugin/herdr-sidebar/AGENTS.md` L243-247). | CONFIRMED |
+| `agent.send_keys/error-invalid-key.json` | `GH:src/app/api/agents.rs` L361-366 (`unsupported key {key}`, the first bad key as sent; no bytes are written). `home` is rejected by `parse_key_combo` (`GH:src/config/keybinds.rs` L1281-1339), and herdr-sidebar's own notes record meeting it live. | CONFIRMED |
 | `agent.send_keys/error-agent-not-ready.json` | `GH:src/app/api/agents.rs` L346-359 and L376-382. Returned when the pane has no known agent kind, or its foreground job is no longer that agent. | CONFIRMED |
 | `agent.send_keys/error-agent-not-found.json` | As for `agent.get` | CONFIRMED |
 | `agent.focus/request.json` | `GH:src/api/schema.rs` L134-135 (`AgentTarget`) | CONFIRMED |

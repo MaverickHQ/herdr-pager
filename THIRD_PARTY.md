@@ -36,9 +36,10 @@ Exact versions are in `bridge/go.sum`. `tools/measure` and `tools/runphase` use 
 | `golang.org/x/sys` | BSD-3-Clause | `x/sys/unix`: the serial port, for pairing over USB |
 | `github.com/pelletier/go-toml/v2` | MIT | The bridge's TOML files: its config, devices, keymaps and risk rules, and fakeherdr's scenarios |
 | `github.com/creack/pty` | MIT | Tests only: a pseudo-terminal stands in for the pager's serial port |
+| `golang.org/x/mod` | BSD-3-Clause | Tests only: `zip.CheckDir` checks that the bridge's module zip, which `go install` builds from, leaves no file out |
 | `golang.org/x/term`, `x/net`, `x/text` | BSD-3-Clause | In `go.sum` as `x/crypto`'s requirements; no package of theirs is built in |
 
-## The setup page's flasher (`bridge/internal/setup/web/vendor/`), embedded in the bridge
+## The setup page's flasher (`bridge/internal/setup/web/esp-web-tools/`), embedded in the bridge
 
 The page `pager-bridge setup` serves flashes the pager in Chrome with ESP Web Tools' browser build, vendored and embedded in `pager-bridge` (its `SOURCE.md` says from where, how it was checked, and the one change: two static `style` attributes dropped for the page's CSP). That build bundles the npm packages below, at the versions in its `package-lock.json`, and keeps none of their licence comments: their licence texts are in `tools/release/licenses/`, and in `licenses/` in the release's archive.
 

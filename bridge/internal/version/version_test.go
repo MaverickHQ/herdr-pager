@@ -3,6 +3,7 @@ package version
 import (
 	"os"
 	"regexp"
+	"slices"
 	"strings"
 	"testing"
 )
@@ -11,15 +12,24 @@ import (
 // as the release tags it (v1.0.0 is "1.0.0").
 // publishedNumber is a published version's number: major.minor.patch, and
 // for a pre-release such as a release candidate, a SemVer suffix (1.0.0-rc.1).
+// Never dev: that's what a build that isn't a published version adds
+// (String), so a VERSION of 1.0.0-dev would build as 1.0.0-dev-dev, and
+// publish as a dev build (phase 5 task 10.1's review).
 var publishedNumber = regexp.MustCompile(`^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z]+(\.[0-9A-Za-z]+)*)?$`)
 
-// TestAPublishedNumber is publishedNumber's own cases.
+func isPublishedNumber(v string) bool {
+	_, pre, _ := strings.Cut(v, "-")
+	return publishedNumber.MatchString(v) && !slices.Contains(strings.Split(pre, "."), "dev")
+}
+
+// TestAPublishedNumber is isPublishedNumber's own cases.
 func TestAPublishedNumber(t *testing.T) {
 	for v, want := range map[string]bool{
-		"1.0.0": true, "1.0.0-rc.1": true, "12.3.45-beta": true,
+		"1.0.0": true, "1.0.0-rc.1": true, "12.3.45-beta": true, "1.0.0-devices": true,
 		"1.0": false, "v1.0.0": false, "1.0.0-": false, "1.0.0-rc..1": false, "1.0.0+build": false, "1.0.0-dev ": false,
+		"1.0.0-dev": false, "1.0.0-rc.1.dev": false,
 	} {
-		if got := publishedNumber.MatchString(v); got != want {
+		if got := isPublishedNumber(v); got != want {
 			t.Errorf("publishedNumber(%q) = %v; want %v", v, got, want)
 		}
 	}
@@ -36,7 +46,7 @@ func TestVersionFileHoldsAPublishedNumber(t *testing.T) {
 		t.Errorf("VERSION is %q; want one line, ending in a newline", data)
 	}
 	line := strings.TrimSuffix(string(data), "\n")
-	if !publishedNumber.MatchString(line) {
+	if !isPublishedNumber(line) {
 		t.Errorf("VERSION says %q; want a published version's number, such as 1.0.0", line)
 	}
 	if Number() != line {

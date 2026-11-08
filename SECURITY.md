@@ -28,4 +28,4 @@ These are known, and out of scope:
 
 ## Supported versions
 
-Only the latest commit on `main`. There are no releases yet.
+The latest release, and the latest commit on `main`.

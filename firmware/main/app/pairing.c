@@ -387,7 +387,11 @@ static void on_line(app_state_t *s, pairing_t *p, const app_event_t *ev, app_ms_
         }
         break;
     case CONFIRMED:
-        if (kind == LINE_OFFER) {
+        if (now >= p->until) {
+            /* A line after the 30 s, handed over before the deadline call, as a late press is: the window is
+             * closed, whatever it holds (requirement 2.9, ADR 0011). */
+            discard(s, p, "timeout", out);
+        } else if (kind == LINE_OFFER) {
             result(out, "busy");
         } else if (kind == LINE_SET && read_set(p)) {
             commit(s, p, out);

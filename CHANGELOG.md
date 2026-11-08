@@ -2,6 +2,23 @@
 
 All notable changes to herdr-pager are listed here. The pager's firmware and the bridge are versioned together, and each published version's entry is also its release notes.
 
+## v1.0.1 (2026-11-08)
+
+The fixes from v1.0.0's whole-release review. Update the bridge and the pager together: `brew upgrade herdr-pager`, then Update in the setup page's Manage, which keeps the pairing.
+
+### Fixed
+
+- **The pager took the Wi-Fi networks after BOOT's 30 s had run out.** Pairing gives the Mac 30 s after you press BOOT to send the networks (ADR 0011), but a pager on v1.0.0 could still take ones that arrived just after. It now treats them as too late, as it does a late press of BOOT, and keeps nothing.
+- **A bridge built with `go install` has the setup page's flasher.** In v1.0.0, ESP Web Tools sat in a folder named `vendor`, which a Go module zip leaves out, so `go install …/bridge/cmd/pager-bridge@…` built a bridge whose setup page couldn't flash. The release's archive and a build from a checkout weren't affected. A test now fails if the module zip would leave out any file.
+- **A hand-started run of the release workflow on a tag could publish.** Only a pushed tag publishes now, and every run checks the CHANGELOG's entry for its version.
+- **`verify` let an entry in the archive climb out of its folder** (`herdr-pager-<version>/../…`), and now refuses it; it also checks that the bridge is a macOS arm64 executable and that libssh's source holds its C files.
+- **A version of `1.0.0-dev` would have passed as a published number,** and built as a dev build; it's refused.
+- **`SECURITY.md` said there were no releases yet.**
+
+### Known problems
+
+As v1.0.0's, below, but for `go install`: Homebrew still needs current Command Line Tools to install it, as there's no bottle yet.
+
 ## v1.0.0 (2026-11-08)
 
 The first published version: **the desk pager**, made for a newcomer to set up alone. It runs beside a Mac with Apple Silicon, on USB power and the Mac's Wi-Fi, and pages for the Claude Code agents in [herdr](https://github.com/herdrdev/herdr). Its maintainer uses it daily, and the numbers in the README were measured on that board.

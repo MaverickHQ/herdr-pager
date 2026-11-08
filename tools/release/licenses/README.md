@@ -20,7 +20,7 @@ The release's archive carries these files in `licenses/`, beside `LICENSE` and `
 | `espressif-esp_lcd_axs15231b.txt` | `espressif/esp_lcd_axs15231b` | Apache-2.0 | the component's `license.txt`, 2.1.1 |
 | `espressif-esp_codec_dev.txt` | `espressif/esp_codec_dev` | Apache-2.0 | the component's `LICENSE`, 1.6.2 |
 | `espressif-esp_lcd_touch.txt` | `espressif/esp_lcd_touch` | Apache-2.0 | the component's `license.txt`, 1.2.1 |
-| `esp-web-tools.txt` | `esp-web-tools` 10.4.0 (ESP Web Tools), the setup page's flasher, vendored in `bridge/internal/setup/web/vendor/` and embedded in `pager-bridge` | Apache-2.0 | the package's `LICENSE` (the vendored copy beside it) |
+| `esp-web-tools.txt` | `esp-web-tools` 10.4.0 (ESP Web Tools), the setup page's flasher, vendored in `bridge/internal/setup/web/esp-web-tools/` and embedded in `pager-bridge` | Apache-2.0 | the package's `LICENSE` (the vendored copy beside it) |
 | `npm-material-web.txt` | `@material/web` 2.4.1, bundled in ESP Web Tools' browser build | Apache-2.0 | the package's `LICENSE` |
 | `npm-esptool-js.txt` | `esptool-js` 0.6.0, bundled in ESP Web Tools' browser build | Apache-2.0 | the package's `LICENSE` |
 | `npm-improv-wifi-serial-sdk.txt` | `improv-wifi-serial-sdk` 2.8.0, bundled in ESP Web Tools' browser build | Apache-2.0 | the package's `LICENSE` |

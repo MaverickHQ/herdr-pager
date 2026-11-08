@@ -188,7 +188,7 @@ func readTarGz(b []byte, root string) (map[string]tarFile, error) {
 			return nil, fmt.Errorf("not a tar archive: %w", err)
 		}
 		rel, ok := strings.CutPrefix(h.Name, root+"/")
-		if !ok && h.Name != root {
+		if (!ok && h.Name != root) || (rel != "" && !filepath.IsLocal(rel)) { // not root/../x either
 			return nil, fmt.Errorf("%s is outside its folder, %s/", h.Name, root)
 		}
 		switch h.Typeflag {

@@ -85,7 +85,7 @@ The parent's test lists stay the checklist of behaviours to cover.
 | Lane `board` (the re-pin, the board build, ON BATTERY, P-17 and P-19 on the board) | auto, board | `needs:` the kit's `v0.1.0`; held back while no board is present; holds the board lock for its sessions and the 24-hour wait (dropped with N6 by the owner, 2026-10-24). The bridge runs on the Mac; Wi-Fi comes from `test-wifi.toml` through a host tool. |
 | Smoke test, guided checkpoint, acceptance day | human | Batched in the merge stage; real herdr and Claude Code |
 
-- **Spend cap:** $450 for the phase (decision 6), split between the lanes and a shared pool, as in the block below.
+- **Spend:** capped for the phase, and split between the lanes and a shared pool (the runner's block).
 - **Allowlist:** `go` build, test, vet, run, mod and get; the kit's boardtest by `go -C ~/lcd349-kit run`; `idf.py`; `lcd349` (the kit's CLI); `pkg-config --modversion`; `chmod +x`; the firmware's host-test script; read-only `git`; valvur's `check_package`. Not `herdr` (it reaches the owner's live panes), and not `git add` or `git commit` (the runner commits).
 
 ### Lanes
@@ -100,18 +100,18 @@ The parent's test lists stay the checklist of behaviours to cover.
   - `bridge/keymaps/embed.go` (package keymaps, `//go:embed *.toml`);
 - the `devices.toml`, `config.toml` and `status.json` code.
 
-| Lane | Groups | Depends on | Owns | Cap |
-|---|---|---|---|---|
-| `cli` | 2 | foundation | `init`, `devices` and `provision` commands; `internal/config`, `internal/devices`, `internal/provision` | $25 |
-| `cards` | 3 | foundation | `internal/sanitize`, `keymap`, `risk`, `card` | $35 |
-| `e2e` | 4 | foundation | `serve`, `stdio` and `status` commands; `cmd/fakeherdr`; `internal/herdr`, `herdrtest`, `watch`, `protocol`, `sshserver`, `devsim`, `repocheck`; `session/session*.go`; `bridge/e2e/`; `docs/measurements.md` | $55 |
-| `fw` | 5 | foundation | `firmware/` (it lays out the files the firmware lanes fill, and the platform glue); the harness core `bridge/emutest/harness*.go` | $30 |
-| `core` | 6 | `fw` | `firmware/main/app/`, `firmware/test_host/` | $60 |
-| `verdicts` | 7 | `cards`, `e2e` | `session/verb*.go`, `bridge/e2e/verb*_test.go` | $22 |
-| `pairing` | 8 | `cli`, `e2e`, `core` | `firmware/main/net/`, `prov/`, `app/pairing*`, `ui/screen_pairing*`, `ui/screen_link*`, `scenarios/pairing/`, the isolation test; `bridge/emutest/pairing_*` (the harness's bridge and fake-herdr helpers) | $35 |
-| `goldens` | 9 | `core`, `verdicts`, `pairing` | `firmware/main/ui/screen_{list,card,menu,status,confirm,toast,info}*`, `firmware/scenarios/desk/`; `bridge/emutest/desk_*` | $30 |
-| `board` | 10 | `pairing`, `goldens`; **needs** the kit's `v0.1.0`, and the board | `firmware/` (the re-pin, the board build, the power-source glue, `testhooks/`, `board_checks/`), `tools/measure/`, `docs/measurements.md`, this spec's `n6/` | $25 |
-| `docs` | 11 | `cli`, `e2e` | `README.md`, `docs/bridge.md`, `contrib/launchd/`, `CLAUDE.md`, `bridge/e2e/launchd*_test.go` | $8 |
+| Lane | Groups | Depends on | Owns |
+|---|---|---|---|
+| `cli` | 2 | foundation | `init`, `devices` and `provision` commands; `internal/config`, `internal/devices`, `internal/provision` |
+| `cards` | 3 | foundation | `internal/sanitize`, `keymap`, `risk`, `card` |
+| `e2e` | 4 | foundation | `serve`, `stdio` and `status` commands; `cmd/fakeherdr`; `internal/herdr`, `herdrtest`, `watch`, `protocol`, `sshserver`, `devsim`, `repocheck`; `session/session*.go`; `bridge/e2e/`; `docs/measurements.md` |
+| `fw` | 5 | foundation | `firmware/` (it lays out the files the firmware lanes fill, and the platform glue); the harness core `bridge/emutest/harness*.go` |
+| `core` | 6 | `fw` | `firmware/main/app/`, `firmware/test_host/` |
+| `verdicts` | 7 | `cards`, `e2e` | `session/verb*.go`, `bridge/e2e/verb*_test.go` |
+| `pairing` | 8 | `cli`, `e2e`, `core` | `firmware/main/net/`, `prov/`, `app/pairing*`, `ui/screen_pairing*`, `ui/screen_link*`, `scenarios/pairing/`, the isolation test; `bridge/emutest/pairing_*` (the harness's bridge and fake-herdr helpers) |
+| `goldens` | 9 | `core`, `verdicts`, `pairing` | `firmware/main/ui/screen_{list,card,menu,status,confirm,toast,info}*`, `firmware/scenarios/desk/`; `bridge/emutest/desk_*` |
+| `board` | 10 | `pairing`, `goldens`; **needs** the kit's `v0.1.0`, and the board | `firmware/` (the re-pin, the board build, the power-source glue, `testhooks/`, `board_checks/`), `tools/measure/`, `docs/measurements.md`, this spec's `n6/` |
+| `docs` | 11 | `cli`, `e2e` | `README.md`, `docs/bridge.md`, `contrib/launchd/`, `CLAUDE.md`, `bridge/e2e/launchd*_test.go` |
 
 - **No lane owns** `bridge/go.mod`, `bridge/go.sum` (generated: the merge steps tidy it), `bridge/cmd/pager-bridge/main.go`, `bridge/keymaps/` (phase 0's expected values), the fixtures under `testdata/` or this spec. A lane that needs one of them stops and says why.
 - **Waves:**
@@ -131,158 +131,9 @@ The parent's test lists stay the checklist of behaviours to cover.
   - the records for the commit; the runner squashes and tags.
 - **Estimate:** 64–90 agent hours (the draft's 52–77, plus the fake herdr program, the emulator harness, the platform glue and about 40 more slices). **Wall clock:** about 14–20 hours of lanes before lane `board`; then lane `board` with the 24-hour run (dropped with N6 by the owner, 2026-10-24), the checkpoint and the acceptance day.
 
-### `run-phase` block (confirmed 2026-10-22)
+### The runner's block
 
-```run-phase
-model: claude-opus-5-5
-spend_cap_usd: 450
-session_timeout: 6h
-wait_max: 26h
-concurrency: 3
-allow:
-  - "Bash(go build:*)"
-  - "Bash(go test:*)"
-  - "Bash(go vet:*)"
-  - "Bash(go run:*)"
-  - "Bash(go mod:*)"
-  - "Bash(go get:*)"
-  - "Bash(go version:*)"
-  - "Bash(go -C bridge:*)"
-  - "Bash(go -C ~/lcd349-kit run ./tools/boardtest:*)"
-  - "Bash(PAGER_EMUTEST=1 go test:*)"
-  - "Bash(PAGER_MEASURE=1 go test:*)"
-  - "Bash(idf.py:*)"
-  - "Bash(lcd349:*)"
-  - "Bash(pkg-config --modversion:*)"
-  - "Bash(chmod +x:*)"
-  - "Bash(firmware/test_host/run.sh:*)"
-  - "Bash(./firmware/test_host/run.sh:*)"
-  - "Bash(git status:*)"
-  - "Bash(git diff:*)"
-  - "Bash(git log:*)"
-  - "Bash(git -C ~/lcd349-kit rev-parse:*)"
-  - "Bash(git -C ~/lcd349-kit cat-file:*)"
-  - "mcp__plugin_valvur_valvur__check_package"
-deny_extra:
-  - "Edit(~/lcd349-kit/**)"
-  - "Write(~/lcd349-kit/**)"
-add_dirs: ["~/lcd349-kit", "~/.run-phase/out"]
-tags: ["v0.1.0"]
-session_check: "if [ -f bridge/go.mod ]; then (cd bridge && go vet ./... && go test ./...); fi && if [ -x firmware/test_host/run.sh ]; then firmware/test_host/run.sh; fi"
-generated:
-  - "bridge/go.sum"
-merge_steps:
-  - "cd bridge && go mod tidy"
-phase_gate: "cd bridge && go vet ./... && go test ./... && go test ./internal/sanitize -run '^$' -fuzz '^FuzzSanitizeOutputIsPrintableWithinLimit$' -fuzztime 60s && go test ./internal/risk -run '^$' -fuzz '^FuzzRiskMatchIsLinear$' -fuzztime 60s && cd .. && firmware/test_host/run.sh && lcd349 build -C firmware && (cd bridge && PAGER_EMUTEST=1 go test ./emutest/...) && (cd tools/measure && PAGER_MEASURE=1 go test -count=1 -timeout 90m ./...)"
-lanes:
-  cli:
-    owns:
-      - "bridge/cmd/pager-bridge/init*.go"
-      - "bridge/cmd/pager-bridge/devices*.go"
-      - "bridge/cmd/pager-bridge/provision*.go"
-      - "bridge/internal/config/**"
-      - "bridge/internal/devices/**"
-      - "bridge/internal/provision/**"
-    check: "cd bridge && go vet ./... && go test ./..."
-    cap_usd: 25
-  cards:
-    owns:
-      - "bridge/internal/sanitize/**"
-      - "bridge/internal/keymap/**"
-      - "bridge/internal/risk/**"
-      - "bridge/internal/card/**"
-    check: "cd bridge && go vet ./... && go test ./..."
-    cap_usd: 35
-  e2e:
-    owns:
-      - "bridge/cmd/pager-bridge/serve*.go"
-      - "bridge/cmd/pager-bridge/stdio*.go"
-      - "bridge/cmd/pager-bridge/status*.go"
-      - "bridge/cmd/fakeherdr/**"
-      - "bridge/internal/herdr/**"
-      - "bridge/internal/herdrtest/**"
-      - "bridge/internal/watch/**"
-      - "bridge/internal/protocol/**"
-      - "bridge/internal/sshserver/**"
-      - "bridge/internal/devsim/**"
-      - "bridge/internal/repocheck/**"
-      - "bridge/internal/session/session*.go"
-      - "bridge/e2e/**"
-      - "docs/measurements.md"
-    check: "cd bridge && go vet ./... && go test ./..."
-    cap_usd: 55
-  fw:
-    owns:
-      - "firmware/**"
-      - "bridge/emutest/harness*.go"
-    check: "lcd349 build -C firmware && firmware/test_host/run.sh && cd bridge && go vet ./emutest/... && PAGER_EMUTEST=1 go test ./emutest/..."
-    cap_usd: 30
-  core:
-    owns:
-      - "firmware/main/app/**"
-      - "firmware/test_host/**"
-    check: "firmware/test_host/run.sh"
-    cap_usd: 60
-  verdicts:
-    owns:
-      - "bridge/internal/session/verb*.go"
-      - "bridge/e2e/verb*_test.go"
-    check: "cd bridge && go vet ./... && go test ./..."
-    cap_usd: 22
-  pairing:
-    owns:
-      - "firmware/main/net/**"
-      - "firmware/main/prov/**"
-      - "firmware/main/app/pairing*"
-      - "firmware/main/ui/screen_pairing*"
-      - "firmware/main/ui/screen_link*"
-      - "firmware/scenarios/pairing/**"
-      - "firmware/test_host/test_isolation*"
-      - "bridge/emutest/pairing_*"
-    check: "firmware/test_host/run.sh && lcd349 build -C firmware && cd bridge && PAGER_EMUTEST=1 go test ./emutest/..."
-    cap_usd: 35
-  goldens:
-    owns:
-      - "firmware/main/ui/screen_list*"
-      - "firmware/main/ui/screen_card*"
-      - "firmware/main/ui/screen_menu*"
-      - "firmware/main/ui/screen_status*"
-      - "firmware/main/ui/screen_confirm*"
-      - "firmware/main/ui/screen_toast*"
-      - "firmware/main/ui/screen_info*"
-      - "firmware/scenarios/desk/**"
-      - "bridge/emutest/desk_*"
-    check: "firmware/test_host/run.sh && lcd349 build -C firmware && cd bridge && PAGER_EMUTEST=1 go test ./emutest/..."
-    cap_usd: 30
-  board:
-    owns:
-      - "firmware/**"
-      - "bridge/emutest/power_*"
-      - "tools/measure/**"
-      - "docs/measurements.md"
-      - ".kiro/specs/phase-2-desk-pager/n6/**"
-    needs: "git -C ~/lcd349-kit rev-parse -q --verify refs/tags/v0.1.0"
-    holds_board: true
-    check: "idf.py -C firmware set-target esp32s3 build"
-    cap_usd: 25
-  docs:
-    owns:
-      - "README.md"
-      - "docs/bridge.md"
-      - "contrib/launchd/**"
-      - "CLAUDE.md"
-      - "bridge/e2e/launchd*_test.go"
-    check: "test -f README.md && test -f docs/bridge.md && cd bridge && go test ./..."
-    cap_usd: 8
-```
-
-- **The lane caps** add up to $325 (72 %). The other $125 is the shared pool: the foundation, integration sessions and the merge stage.
-- **This run without the board** (everything but lane `board` and the merge stage) should spend at most about $380.
-- **Built into the runner:** the always-denied rules (push, remote, `gh`, publishing, reading `~/.config/herdr-pager/`); no `HERDR_*` variables for sessions or checks; usage limits waited out (up to 24 hours); a lane with an open `[board]` task held back while no board is present (all 2026-10-22).
-- **The session check** skips the bridge until `bridge/go.mod` exists (group 0 runs before it), and the firmware's host tests until `run.sh` exists.
-- **`firmware/dependencies.lock*`** is gitignored, as in the kit: the pin in `idf_component.yml` is what's reproducible.
-- **Fuzzing in the gate:** one `go test -fuzz` command per target, 60 s each. `-fuzz` takes one target in one package, and `-fuzztime` without it runs only the seed inputs (corrected 2026-10-21).
-- **The release tag:** `tags` makes the runner tag the squashed commit `phase-2-done` and, annotated, `v0.1.0` (herdr-pager's own, not the kit's).
+The `run-phase` block that ran this phase (its model, spend cap, lane caps and the agents' allow and deny rules) is kept with the phase's private run logs.
 
 ## Risks
 

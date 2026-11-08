@@ -194,7 +194,7 @@ Parsed by task 12.5, 2026-10-26.
 - **The sources** are the owner's notes and the bridge's two logs, in `~/.run-phase/out/phase-2-desk/`, outside the repository:
   - `checkpoint-notes.md` and `bridge.log`: the desk checkpoint (task 12.3), 2026-10-24;
   - `day-notes.md` and `day-bridge.log`: the acceptance day (task 12.4), 2026-10-25. Its fixes and their re-test are in `.kiro/specs/phase-2-desk-pager/day-1-fixes.md`.
-- **The clock:** the logs are on the Mac's clock, and the times below are as logged. The UK's clocks went back at 02:00 on 25 October, so 24 October's lines are at +01:00. 25 October's are in UTC, which was the owner's local time that day.
+- **The clock:** the logs are on the Mac's clock, and the times below are as logged. The Mac's local clock moved back an hour at 02:00 on 25 October, which the times below keep as logged.
 - **What the logs can show:** the bridge logs pane ids, verbs and seqs, never prompt text or agent names (parent 11.5). The notes tie each verdict to its prompt.
 
 ### The desk checkpoint (2026-10-24): PASS

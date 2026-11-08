@@ -426,10 +426,14 @@ func TestWifiJoinRetriesWithBackoff(t *testing.T) {
 	}
 
 	// The boot's join, then four retries.
+	// The upper bound has 0.4 s for a busy host's timing: on CI's shared Mac,
+	// the v1.0.0-rc.1 tag's run saw the 8 s retry 10.17 s on. It stays below
+	// where the next step's would start, and the lower bound, which proves each
+	// wait, is exact.
 	at := joinTries(t, in, 5, 40*time.Second)
 	for i, retry := range []float64{1, 2, 4, 8} {
 		gap := at[i+1].Sub(at[i]).Seconds()
-		if lo, hi := retry+0.9, retry+2.1; gap < lo || gap > hi {
+		if lo, hi := retry+0.9, retry+2.5; gap < lo || gap > hi {
 			t.Fatalf("try %d came %.2f s after the one before; want %.1f-%.1f (a %.0f s wait, then a 1 s scan)",
 				i+2, gap, lo, hi, retry)
 		}

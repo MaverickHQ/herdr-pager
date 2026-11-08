@@ -222,6 +222,30 @@ func TestVerifyReleaseArtefacts(t *testing.T) {
 			say: []string{archive, "bin/pager-bridge isn't executable"},
 		},
 		{
+			// Added in phase 5 task 10.1's review: 8.4 and 9.5 relied on
+			// verify for CI's bridge, and no case reached its platform check.
+			name: "an archive whose bridge is for Intel Macs",
+			change: func(t *testing.T, dir string) {
+				edit(t, dir, archive, func(e *fixture.Entry) {
+					if strings.HasSuffix(e.Name, "/bin/pager-bridge") {
+						e.Data = fixture.MachO(fixture.CPUAmd64)
+					}
+				})
+			},
+			say: []string{archive, "isn't a macOS arm64 executable"},
+		},
+		{
+			// Added in phase 5 task 10.1's review: libssh's full source is what
+			// ADR 0004 publishes beside the binaries.
+			name: "libssh's source without its C sources",
+			change: func(t *testing.T, dir string) {
+				rewrite(t, dir, libssh, func(name string) bool {
+					return strings.Contains(name, "/libssh-mirror/src/") && strings.HasSuffix(name, ".c")
+				})
+			},
+			say: []string{libssh, "no C sources in libssh-mirror/src/"},
+		},
+		{
 			name: "an archive whose THIRD_PARTY.md isn't the release's",
 			change: func(t *testing.T, dir string) {
 				edit(t, dir, archive, func(e *fixture.Entry) {
@@ -242,6 +266,19 @@ func TestVerifyReleaseArtefacts(t *testing.T) {
 				})
 			},
 			say: []string{archive, "elsewhere/LICENSE is outside its folder"},
+		},
+		{
+			// Added in phase 5 task 10.1's review: the folder's own name, then
+			// "..", passed the prefix check.
+			name: "an archive with an entry that climbs out of its folder",
+			change: func(t *testing.T, dir string) {
+				edit(t, dir, archive, func(e *fixture.Entry) {
+					if strings.HasSuffix(e.Name, "/LICENSE") {
+						e.Name = "herdr-pager-9.8.7/../../LICENSE"
+					}
+				})
+			},
+			say: []string{archive, "herdr-pager-9.8.7/../../LICENSE is outside its folder"},
 		},
 		{
 			name: "libssh's source isn't the version its name says",
