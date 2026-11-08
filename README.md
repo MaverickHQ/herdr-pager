@@ -119,7 +119,7 @@ One board, no soldering: Waveshare's [ESP32-S3-Touch-LCD-3.49B](https://www.wave
 
 You need:
 
-- **a Mac with Apple Silicon**, with [Homebrew](https://brew.sh), and [herdr](https://github.com/herdrdev/herdr) running your Claude Code agents;
+- **a Mac with Apple Silicon**, with [Homebrew](https://brew.sh) and current Command Line Tools, and [herdr](https://github.com/herdrdev/herdr) running your Claude Code agents. Homebrew installs herdr-pager as it would a build from source (there's no bottle yet), so with older tools it stops at "Your Command Line Tools are too outdated": update them from Software Update in System Settings, or with `xcode-select --install`;
 - **Chrome or Edge**, for the setup page: it flashes the pager over WebSerial, which Safari and Firefox don't have;
 - **the board**, and a USB-C cable that carries data, not only power;
 - **a 2.4 GHz Wi-Fi network that the Mac is on too** ([Limitations](#limitations)).

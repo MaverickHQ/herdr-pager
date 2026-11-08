@@ -2,7 +2,7 @@
 
 All notable changes to herdr-pager are listed here. The pager's firmware and the bridge are versioned together, and each published version's entry is also its release notes.
 
-## v1.0.0 (unreleased)
+## v1.0.0 (2026-11-08)
 
 The first published version: **the desk pager**, made for a newcomer to set up alone. It runs beside a Mac with Apple Silicon, on USB power and the Mac's Wi-Fi, and pages for the Claude Code agents in [herdr](https://github.com/herdrdev/herdr). Its maintainer uses it daily, and the numbers in the README were measured on that board.
 
@@ -74,6 +74,7 @@ Before it there was only v0.1.0 (2026-10-26), a local tag for the desk pager's f
 - **Back home, it stays on a phone's hotspot** while the hotspot is up, even when the Mac has left it.
 - **A link that dies quietly** (the Mac asleep, or gone from the network) is noticed within 8 s of a press, but otherwise only after about 150 s.
 - **A few restarts at the desk had no recorded cause.** Device info now says why the pager last started, so the next one will.
+- **Homebrew needs current Command Line Tools to install it.** The formula has no bottle yet, so Homebrew treats the install as a build from source and stops at "Your Command Line Tools are too outdated" until they're updated (Software Update, or `xcode-select --install`). A bottle is planned.
 - **The bridge isn't signed with an Apple Developer ID.** Homebrew and curl don't quarantine what they download, so macOS runs it; `SHA256SUMS` and the build attestations vouch for it.
 - Flashing from the setup page needs Chrome or Edge (WebSerial).
 
