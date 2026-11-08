@@ -86,9 +86,12 @@ jobs:
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Build
         shell: bash
+        # SDKCONFIG is absolute: CMake reads a relative one from the project,
+        # firmware/, not from here (the first dry run, 2026-11-08, looked for
+        # firmware/firmware/build-release/sdkconfig). -B is read from here.
         run: |
           . "$IDF_PATH/export.sh"
-          idf.py -C firmware -B "$BUILD" -D SDKCONFIG="$BUILD/sdkconfig" -D PAGER_VERSION="$VERSION" set-target esp32s3 build
+          idf.py -C firmware -B "$BUILD" -D SDKCONFIG="$PWD/$BUILD/sdkconfig" -D PAGER_VERSION="$VERSION" set-target esp32s3 build
       # The component manager resolved the committed pins: a change to a
       # resolved version or hash means the build used something else. A change
       # of form alone (another component manager's layout) is shown, not fatal.
