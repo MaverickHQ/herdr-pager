@@ -307,4 +307,10 @@ jobs:
       - name: The release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag --title "herdr-pager $GITHUB_REF_NAME" --notes-file notes/notes.md dist/*
+        # A version with a SemVer suffix (1.0.0-rc.1) is a pre-release: never
+        # the latest, so the README's version badge and Homebrew users' "latest"
+        # stay on the last full version.
+        run: |
+          pre=()
+          case "$VERSION" in *-*) pre=(--prerelease --latest=false) ;; esac
+          gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --verify-tag --title "herdr-pager $GITHUB_REF_NAME" --notes-file notes/notes.md "${pre[@]}" dist/*

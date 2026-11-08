@@ -1,6 +1,7 @@
 package emutest
 
 import (
+	"image"
 	"slices"
 	"strconv"
 	"testing"
@@ -125,7 +126,10 @@ func TestDeskMenusAndInterruptConfirm(t *testing.T) {
 	// The emulator's build isn't a published version (phase 5 task 1.3); the fingerprints and the port are masked.
 	wantBody(t, in, "emu-01", "FW "+version.Number()+"-dev  STARTED: RESTART")
 	in.HintCell("BACK")
-	in.MatchDeskGolden("info")
+	// The FW line is checked as text just above, against VERSION; in the golden
+	// it's masked, so a new version needs no new golden (v1.0.0-rc.1's gate).
+	maskInfoFW := image.Rect(0, 56, 640, 77)
+	in.MatchDeskGolden("info", maskInfoFW)
 	in.Press("pwr", 100)
 	in.WaitText("OPEN", 5*time.Second)
 	if sent := b.SentKeys(); len(sent) != 1 {

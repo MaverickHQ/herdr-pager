@@ -9,7 +9,21 @@ import (
 
 // A published version's number (requirement 3.3): plain semantic versioning,
 // as the release tags it (v1.0.0 is "1.0.0").
-var publishedNumber = regexp.MustCompile(`^[0-9]+\.[0-9]+\.[0-9]+$`)
+// publishedNumber is a published version's number: major.minor.patch, and
+// for a pre-release such as a release candidate, a SemVer suffix (1.0.0-rc.1).
+var publishedNumber = regexp.MustCompile(`^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z]+(\.[0-9A-Za-z]+)*)?$`)
+
+// TestAPublishedNumber is publishedNumber's own cases.
+func TestAPublishedNumber(t *testing.T) {
+	for v, want := range map[string]bool{
+		"1.0.0": true, "1.0.0-rc.1": true, "12.3.45-beta": true,
+		"1.0": false, "v1.0.0": false, "1.0.0-": false, "1.0.0-rc..1": false, "1.0.0+build": false, "1.0.0-dev ": false,
+	} {
+		if got := publishedNumber.MatchString(v); got != want {
+			t.Errorf("publishedNumber(%q) = %v; want %v", v, got, want)
+		}
+	}
+}
 
 // TestVersionFileHoldsAPublishedNumber reads VERSION as the firmware's CMake
 // and the release workflow do: one line, a published version's number.

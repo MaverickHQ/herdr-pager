@@ -76,3 +76,8 @@ Before it there was only v0.1.0 (2026-10-26), a local tag for the desk pager's f
 - **A few restarts at the desk had no recorded cause.** Device info now says why the pager last started, so the next one will.
 - **The bridge isn't signed with an Apple Developer ID.** Homebrew and curl don't quarantine what they download, so macOS runs it; `SHA256SUMS` and the build attestations vouch for it.
 - Flashing from the setup page needs Chrome or Edge (WebSerial).
+
+## v1.0.0-rc.1 (2026-11-08)
+
+A release candidate for v1.0.0, published to rehearse the release from end to end: CI's archive and libssh's source, their build attestations, the Homebrew formula in `MaverickHQ/homebrew-tap`, and `brew install`. It holds what v1.0.0's entry below lists. Try it if you like; v1.0.0 follows it, and replaces it in the tap.
+
